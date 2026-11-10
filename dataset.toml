@@ -1,0 +1,16 @@
+schema_version = 1
+[benchmark]
+id = "extreme-financial-events"
+version = "1.0.0"
+name = "Extreme financial events benchmark"
+description = "LDI acceptance trio, treasury network L8 baseline and source-reconstruction cases over one duty workflow family"
+[tasks]
+include = ["tasks/*/task*.toml"]
+[defaults]
+environment_profile = "local"
+target_timeout_seconds = 2400
+judge_timeout_seconds = 30
+[environment_profiles.local]
+type = "workspace"
+[harness_requirements]
+target_capabilities = ["agent.action_json"]
