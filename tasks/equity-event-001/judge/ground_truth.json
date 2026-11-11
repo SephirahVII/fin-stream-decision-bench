@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "case_id": "equity-event-001",
+  "subject": {
+    "ticker": "GOOGL",
+    "issuer": "Alphabet Inc.",
+    "cik": "1652044",
+    "report_period": "Q1 2026",
+    "fiscal_period_end": "2026-03-31"
+  },
+  "epoch_utc": "2026-04-29T19:00:00Z",
+  "deadlines": {
+    "forecast": 3300,
+    "reconciliation": 4800,
+    "verification": 22800
+  },
+  "actual": {
+    "total_revenue_usd_m": 109896.0,
+    "tac_usd_m": 15228.0,
+    "net_revenue_usd_m": 94668.0,
+    "diluted_eps_usd": 5.11,
+    "net_income_usd_m": 62578.0,
+    "operating_income_usd_m": 39696.0,
+    "operating_margin_pct": 36.121424,
+    "google_services_revenue_usd_m": 89637.0,
+    "google_services_operating_income_usd_m": 40589.0,
+    "google_cloud_revenue_usd_m": 20028.0,
+    "google_cloud_operating_income_usd_m": 6598.0,
+    "google_services_margin_pct": 45.281524,
+    "google_cloud_margin_pct": 32.943879
+  },
+  "consensus": {
+    "net_revenue_usd_m": 91690.0,
+    "diluted_eps_usd": 2.76
+  },
+  "surprise_expected": {
+    "net_revenue_pct": 3.2479,
+    "eps_pct": 85.1449
+  },
+  "expected_beat_miss": {
+    "net_revenue": "beat",
+    "eps": "beat"
+  },
+  "expected_probability_events": {
+    "net_revenue_beat": true,
+    "eps_beat": true
+  },
+  "tolerances": {
+    "forecast_net_revenue_tol_usd_m": 2840.04,
+    "forecast_eps_tol_usd": 0.3,
+    "reconciliation_actual_tol_usd_m": 1.0,
+    "reconciliation_eps_tol_usd": 0.01,
+    "surprise_net_revenue_tol_pct": 0.05,
+    "surprise_eps_tol_pct": 0.5,
+    "verification_actual_tol_usd_m": 1.0,
+    "verification_eps_tol_usd": 0.01,
+    "margin_tol_pct": 0.05,
+    "forecast_tac_tol_usd_m": 1522.8
+  },
+  "documents": {
+    "googl-8k-20260429-ex991": {
+      "available_at_s": 3695,
+      "filing": "0001652044-26-000043",
+      "title": "Alphabet Q1 2026 earnings press release (8-K EX-99.1)"
+    },
+    "googl-8k-20260429": {
+      "available_at_s": 3695,
+      "filing": "0001652044-26-000043",
+      "title": "Form 8-K, 2026-04-29"
+    },
+    "googl-10q-20260331": {
+      "available_at_s": 21731,
+      "filing": "0001652044-26-000048",
+      "title": "Form 10-Q, quarter ended 2026-03-31"
+    },
+    "googl-10k-20251231": {
+      "available_at_s": 0,
+      "filing": "0001652044-26-000018",
+      "title": "Form 10-K, fiscal year 2025"
+    },
+    "googl-8k-20260410": {
+      "available_at_s": 0,
+      "filing": "0001652044-26-000034",
+      "title": "Form 8-K, 2026-04-10"
+    },
+    "googl-8k-20260402": {
+      "available_at_s": 0,
+      "filing": "0001652044-26-000031",
+      "title": "Form 8-K, 2026-04-02"
+    }
+  },
+  "weights": {
+    "forecast_composite": 74,
+    "probabilities": 5,
+    "one_off_analysis": 3,
+    "reconciliation_actuals": 3,
+    "tenq_verification": 2,
+    "timeliness": 1,
+    "audit_integrity": 2,
+    "evidence_chain": 5,
+    "analysis_logic": 5
+  },
+  "provenance": {
+    "actuals": "SEC EDGAR: 8-K EX-99.1 (accession 0001652044-26-000043, accepted 2026-04-29T20:01:35Z) and Form 10-Q (accession 0001652044-26-000048, accepted 2026-04-30T01:02:11Z)",
+    "consensus": "Zacks consensus for Q1 2026 net revenue 91.69 USD bn and diluted EPS 2.76 USD, published 2026-03-17, as recorded in ILE task O19 (judge-side only)",
+    "net_revenue": "Computed as total revenues 109,896 minus TAC 15,228 = 94,668 USD m; the press release does not print a net-revenue line",
+    "derivation": "surprise_pct = (actual / consensus - 1) * 100; operating margin = operating income / total revenue * 100; segment margins = segment operating income / segment revenue * 100",
+    "v1_1_changes": "forecast scored on net revenue (tol 3%) and TAC (tol 10%) instead of EPS accuracy; segment/operating margins recomputed from filed figures; narrative summary required for reconciliation/verification; audit checks citable docs were read; pass_threshold 0.85.",
+    "margins": "operating margin 39,696/109,896; services 40,589/89,637; cloud 6,598/20,028 (all *100)",
+    "v2_changes": "forecast expanded to a seven-metric full pre-release model; score is the mean of per-metric linear partial credit; one-off equity-securities gain and core EPS are judged in the verification phase; rubric rebalanced so forecast quality dominates and extraction steps are minor.",
+    "v3_changes": "forecast now covers segment operating income as well (nine metrics, equal weights inside the composite); extraction-style checks were demoted and the qualitative rubric was raised, so scores are dominated by pre-release modelling quality rather than document retrieval."
+  },
+  "required_summary_phases": [
+    "reconciliation",
+    "verification"
+  ],
+  "pass_threshold": 0.85,
+  "forecast_expected": {
+    "total_revenue_usd_m": 109896.0,
+    "net_revenue_usd_m": 94668.0,
+    "tac_usd_m": 15228.0,
+    "google_services_revenue_usd_m": 89637.0,
+    "google_cloud_revenue_usd_m": 20028.0,
+    "operating_income_usd_m": 39696.0,
+    "diluted_eps_ex_oneoffs_usd": 2.76,
+    "google_services_operating_income_usd_m": 40589.0,
+    "google_cloud_operating_income_usd_m": 6598.0
+  },
+  "forecast_tolerances": {
+    "total_revenue_usd_m": 1648.44,
+    "net_revenue_usd_m": 2366.7,
+    "tac_usd_m": 913.68,
+    "google_services_revenue_usd_m": 2689.11,
+    "google_cloud_revenue_usd_m": 1602.24,
+    "operating_income_usd_m": 1984.8,
+    "diluted_eps_ex_oneoffs_usd": 0.3,
+    "google_services_operating_income_usd_m": 2029.45,
+    "google_cloud_operating_income_usd_m": 527.84
+  },
+  "one_off_expected": {
+    "equity_gain_usd_m": 36915.0,
+    "core_eps_usd": 2.76
+  },
+  "one_off_tolerances": {
+    "equity_gain_usd_m": 200.0,
+    "core_eps_usd": 0.03
+  }
+}

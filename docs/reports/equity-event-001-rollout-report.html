@@ -1,0 +1,340 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>equity-event-001 rollout report</title>
+<style>body{font:15px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+max-width:1100px;margin:32px auto;padding:0 20px;color:#1f2328}
+h1{font-size:28px;border-bottom:2px solid #d0d7de;padding-bottom:8px}
+h2{font-size:21px;margin-top:30px;border-bottom:1px solid #d0d7de;padding-bottom:5px}
+h3{font-size:17px;margin-top:22px}table{border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid #d0d7de;padding:5px 9px;text-align:left;vertical-align:top}
+th{background:#f6f8fa}code{background:#f6f8fa;padding:1px 4px;border-radius:3px;font-size:13px}
+pre{background:#f6f8fa;padding:12px;border-radius:6px;overflow:auto;font-size:13px}
+li{margin:3px 0}</style></head><body>
+<h1>equity-event-001 滚动评测报告：轨迹与得分</h1>
+
+<p>Case：<code>equity-event-001</code>（Equity event desk: Alphabet Q1 2026 earnings night）</p>
+<p>Workflow：<code>benchmark.equity-event-stream</code>（LiteEval 90ed715，未改动平台代码）</p>
+<p>报告日期：2026-11-11</p>
+<p>结论：<b>3 次独立真实 rollout 均达到 ≤40% 难度要求（38.61% / 29.13% / 33.01%）</b>，三份独立验证报告（solvability / realism / anti-leak）指出的阻塞项已修复并复验，case 可交付。</p>
+
+<h2>1. Case 与评测目标</h2>
+
+<p>一次连续值班：2026-04-29 15:00–21:30 ET，Alphabet Q1 2026 财报夜。信息按真实披露时间通过业务时钟分时释放：</p>
+<ul><li>15:00 ET（t=0）可读：10-K FY2025、2026-04-02 8-K、2026-04-10 8-K；</li><li>t=3300（15:55）第一次提交截止：forecast（九指标 + beat/miss 概率 + 逐项 basis）；</li><li>t=3600（16:00）释放 4/29 收盘价；t=3695（16:01:35）释放真实 8-K EX-99.1 财报新闻；</li><li>t=4800（16:20）第二次提交截止：reconciliation（实际数、surprise、beat/miss、summary）；</li><li>t=21731（21:02:11）释放真实 10-Q；t=22800（21:20）第三次截止：verification（GAAP 数字、one-off bridge、分部 margin、release vs 10-Q 一致性）；t=23400（21:30）值班结束。</li></ul>
+
+<p>数据全部真实：SEC EDGAR filings（8-K/10-Q/10-K + 真实 EX-99.1 新闻）、Yahoo Finance 真实日线、ILE O19 引用的 Zacks 一致预期（net revenue 91.69B / EPS 2.76）；market.db 3.6 MB，逐行 <code>available_at_s</code> 门控 + SQLite authorizer 防护，provenance 与提取脚本随包。</p>
+
+<h2>2. 评分体系（task.toml，权重合计 100，pass_threshold 0.85）</h2>
+
+<table><thead><tr><th>check</th><th>类型</th><th>权重</th><th>说明</th></tr></thead><tbody>
+<tr><td>forecast_composite</td><td>确定性</td><td>74</td><td>9 个盘前指标线性部分分：total / net / TAC / Services / Cloud / Services op inc / Cloud op inc / consolidated op inc / core EPS</td></tr>
+<tr><td>probabilities</td><td>确定性</td><td>5</td><td>Brier 分数（两个真实 beat 事件）</td></tr>
+<tr><td>one_off_analysis</td><td>确定性</td><td>3</td><td>一次性权益收益 $m 与 core EPS</td></tr>
+<tr><td>reconciliation_actuals</td><td>确定性</td><td>3</td><td>实际数 + surprise% + beat/miss（内部 20 分）</td></tr>
+<tr><td>tenq_verification</td><td>确定性</td><td>2</td><td>10-Q 交叉核对 10 项</td></tr>
+<tr><td>timeliness</td><td>确定性</td><td>1</td><td>三个阶段是否在截止前提交</td></tr>
+<tr><td>audit_integrity</td><td>确定性</td><td>2</td><td>引用真实/已发布/实际 read；未发布读取与 rejected submit 罚分</td></tr>
+<tr><td>evidence_chain</td><td>llm_rubric</td><td>5</td><td>引用可定位、推导可复算、无未来信息</td></tr>
+<tr><td>analysis_logic</td><td>llm_rubric</td><td>5</td><td>预测模型逻辑、概率一致性、one-off bridge、跨指标一致性</td></tr>
+</tbody></table>
+
+<p>设计理由：把权重集中在&quot;模型真正做不好的部分&quot;——用真实盘前信息预测九项真实披露数字；检索/对账/时间管理对成熟 agent 近乎免费，故只保留低权重作为完整性与公平性保障。</p>
+
+<h2>3. 校准协议</h2>
+
+<ul><li>平台：LiteEval 90ed715（HEAD = origin/main），未改动平台代码；项目 <code>FinStream Bench</code>，target/judge 共用连接 <code>DeepSeek V4.1 Flash</code>（endpoint https://api.deepseek.com, model deepseek-flash）。</li><li>agent harness：<code>harnesses/json_action</code>（community JSON-action，content-addressed revision 自动注册；已加固 JSON 提取/DSML 解析，见 §6）；judge：同模型 llm_rubric + 确定性 command judge。</li><li>预算：120 actions、target_timeout 2400s、judge_timeout 180s；业务时钟 replay。</li><li>重复：最终配置连续 3 次独立 rollout（每次重新 import 独立 release），全部计入。</li></ul>
+
+<h2>4. 结果总表</h2>
+
+<table><thead><tr><th>版本</th><th>权重/配置</th><th>分数</th><th>结论</th><th>备注</th></tr></thead><tbody>
+<tr><td>r1</td><td>v1 旧 rubric、旧 case（forecast_revenue+forecast_tac 两指标）</td><td>83.22</td><td>fail</td><td>能力型：forecast 数值差，提取/对账满分</td></tr>
+<tr><td>r2</td><td>v2 权重（60/8/5/5/3/3/4/6/6）</td><td>34.70</td><td>fail</td><td>协议型，不计入：DSML 工具标记导致 ~100/120 动作 invalid</td></tr>
+<tr><td>r3</td><td>v2 权重</td><td>49.27</td><td>fail</td><td>v2 分数上限参考</td></tr>
+<tr><td>r4–r6</td><td>v3-A（forecast 66）</td><td>39.87 / 40.06 / 3.00</td><td>fail</td><td>r6 为协议型（尾部幻觉 &quot;User:&quot; 致 submission 解析失败），不计入</td></tr>
+<tr><td>r7–r9</td><td>v3-B（forecast 70）</td><td>39.68 / 41.35 / 37.76</td><td>fail</td><td>3 次中 2 次达标，r8 略超</td></tr>
+<tr><td>r10–r12</td><td>v3-C，旧 verifier（forecast 只平均 7/9 指标）</td><td>35.17 / 33.79 / 36.72</td><td>fail</td><td>历史记录：评审 verifier 时发现 7/9 指标缺陷，其 evidence 未留存，故修复后重跑</td></tr>
+<tr><td>r13–r15</td><td>v3-C 最终 verifier（forecast 平均 9/9 指标）</td><td>38.61 / 29.13 / 33.01</td><td>fail</td><td>最终交付：3/3 均 ≤40%</td></tr>
+</tbody></table>
+
+<p>最终三次逐 check（权重见 §2）：</p>
+
+<table><thead><tr><th>check</th><th>r13</th><th>r14</th><th>r15</th></tr></thead><tbody>
+<tr><td>forecast_composite</td><td>0.2461</td><td>0.1029</td><td>0.1533</td></tr>
+<tr><td>probabilities</td><td>0.8869</td><td>0.8619</td><td>0.8918</td></tr>
+<tr><td>one_off_analysis</td><td>1.0000</td><td>1.0000</td><td>1.0000</td></tr>
+<tr><td>reconciliation_actuals</td><td>0.9948</td><td>0.9948</td><td>0.9948</td></tr>
+<tr><td>tenq_verification</td><td>0.9863</td><td>0.9863</td><td>0.9863</td></tr>
+<tr><td>timeliness</td><td>1.0000</td><td>1.0000</td><td>1.0000</td></tr>
+<tr><td>audit_integrity</td><td>1.0000</td><td>1.0000</td><td>1.0000</td></tr>
+<tr><td>evidence_chain</td><td>0.5000</td><td>0.7500</td><td>0.7500</td></tr>
+<tr><td>analysis_logic</td><td>0.5000</td><td>0.5000</td><td>0.5000</td></tr>
+<tr><td><b>总分</b></td><td><b>38.61%</b></td><td><b>29.13%</b></td><td><b>33.01%</b></td></tr>
+</tbody></table>
+
+<p>usage 与时长：</p>
+
+<table><thead><tr><th>run</th><th>execution id</th><th>wall (s)</th><th>model calls</th><th>input tokens</th><th>cached</th><th>output</th><th>reasoning</th></tr></thead><tbody>
+<tr><td>r13v3</td><td>590eabe1cb224a38ab1f71172deeb1c1</td><td>165</td><td>41</td><td>1,036,566</td><td>973,696</td><td>25,174</td><td>20,642</td></tr>
+<tr><td>r14v3</td><td>2c9af6a6701242b3b4bf9382a03897b5</td><td>176</td><td>33</td><td>834,615</td><td>772,736</td><td>28,294</td><td>22,874</td></tr>
+<tr><td>r15v3</td><td>6610f38b179942dba332e89abc4ba296</td><td>157</td><td>28</td><td>584,476</td><td>532,224</td><td>25,012</td><td>20,854</td></tr>
+</tbody></table>
+
+<h3>4.1 verifier 修订记录（v1.3.1）</h3>
+
+<p>交付复核时发现 <code>judge/verify_ingest.py</code> 的 <code>FORECAST_METRICS</code> 只包含 9 个盘前指标中的 7 个，遗漏了 <code>google_services_operating_income_usd_m</code>（实际 40,589，容差 2,029.45）与 <code>google_cloud_operating_income_usd_m</code>（实际 6,598，容差 527.84），即 forecast_composite 实际按 7/9 指标取平均，与 manual/design/rubric/ground_truth 声明的&quot;九指标&quot;不一致。修复：补入两个分部经营利润指标，单测 8 项全部通过，并以脚本 oracle 重跑平台 conformance（execution <code>50104fc836cf4bf3b192a1b58e4da734</code>）确认 forecast_composite = 1.0、总分 0.9375 pass。由于平台 artifacts 表为空、workspace 已清理，r10–r12 的 evidence 无法离线重判，因此在相同模型/预算/权重下用修复后的 verifier 重跑三次 rollout（r13–r15），结果为 38.61% / 29.13% / 33.01%。历史表中 r10–r12 的数字标注为&quot;7/9 指标 verifier&quot;下测得，仅作历史参考。</p>
+
+<h2>5. 单次轨迹剖析</h2>
+
+<h3>r13v3（score 38.61%）</h3>
+
+<ul><li>时长 165s，模型调用 41 次，controller actions 39 个（invalid 9 个）。</li><li>动作时间线（业务时钟，ET = UTC-4）：</li></ul>
+
+<table><thead><tr><th>t</th><th>时钟</th><th>action</th><th>ok</th></tr></thead><tbody>
+<tr><td>10</td><td>19:00:10Z</td><td>read</td><td>yes</td></tr>
+<tr><td>15</td><td>19:00:15Z</td><td>catalog</td><td>yes</td></tr>
+<tr><td>15</td><td>19:00:15Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>30</td><td>19:00:30Z</td><td>query</td><td>yes</td></tr>
+<tr><td>45</td><td>19:00:45Z</td><td>query</td><td>yes</td></tr>
+<tr><td>60</td><td>19:01:00Z</td><td>query</td><td>yes</td></tr>
+<tr><td>75</td><td>19:01:15Z</td><td>query</td><td>yes</td></tr>
+<tr><td>75</td><td>19:01:15Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>85</td><td>19:01:25Z</td><td>read</td><td>yes</td></tr>
+<tr><td>85</td><td>19:01:25Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>95</td><td>19:01:35Z</td><td>read</td><td>yes</td></tr>
+<tr><td>95</td><td>19:01:35Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>110</td><td>19:01:50Z</td><td>query</td><td>yes</td></tr>
+<tr><td>110</td><td>19:01:50Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>125</td><td>19:02:05Z</td><td>query</td><td>yes</td></tr>
+<tr><td>140</td><td>19:02:20Z</td><td>query</td><td>yes</td></tr>
+<tr><td>155</td><td>19:02:35Z</td><td>query</td><td>yes</td></tr>
+<tr><td>155</td><td>19:02:35Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>170</td><td>19:02:50Z</td><td>query</td><td>yes</td></tr>
+<tr><td>170</td><td>19:02:50Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>185</td><td>19:03:05Z</td><td>query</td><td>yes</td></tr>
+<tr><td>200</td><td>19:03:20Z</td><td>query</td><td>yes</td></tr>
+<tr><td>210</td><td>19:03:30Z</td><td>read</td><td>yes</td></tr>
+<tr><td>225</td><td>19:03:45Z</td><td>query</td><td>yes</td></tr>
+<tr><td>235</td><td>19:03:55Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>3600</td><td>20:00:00Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>3600</td><td>20:00:00Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>3695</td><td>20:01:35Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>3705</td><td>20:01:45Z</td><td>read</td><td>yes</td></tr>
+<tr><td>3715</td><td>20:01:55Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>21600</td><td>01:00:00Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>21615</td><td>01:00:15Z</td><td>query</td><td>yes</td></tr>
+<tr><td>21615</td><td>01:00:15Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>21630</td><td>01:00:30Z</td><td>query</td><td>yes</td></tr>
+<tr><td>21640</td><td>01:00:40Z</td><td>read</td><td>yes</td></tr>
+<tr><td>21731</td><td>01:02:11Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>21741</td><td>01:02:21Z</td><td>read</td><td>yes</td></tr>
+<tr><td>21751</td><td>01:02:31Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>23400</td><td>01:30:00Z</td><td>wait</td><td>yes</td></tr>
+</tbody></table>
+
+<ul><li>盘前九指标预测 vs 实际（forecast_composite 明细）：</li></ul>
+
+<table><thead><tr><th>指标</th><th>预测</th><th>实际</th><th>容差</th><th>得分</th></tr></thead><tbody>
+<tr><td>diluted_eps_ex_oneoffs_usd</td><td>2.75</td><td>2.76</td><td>0.3</td><td>0.967</td></tr>
+<tr><td>google_cloud_operating_income_usd_m</td><td>4200.0</td><td>6598.0</td><td>527.84</td><td>0.000</td></tr>
+<tr><td>google_cloud_revenue_usd_m</td><td>16600.0</td><td>20028.0</td><td>1602.24</td><td>0.000</td></tr>
+<tr><td>google_services_operating_income_usd_m</td><td>37500.0</td><td>40589.0</td><td>2029.45</td><td>0.000</td></tr>
+<tr><td>google_services_revenue_usd_m</td><td>89300.0</td><td>89637.0</td><td>2689.11</td><td>0.875</td></tr>
+<tr><td>net_revenue_usd_m</td><td>91700.0</td><td>94668.0</td><td>2366.7</td><td>0.000</td></tr>
+<tr><td>operating_income_usd_m</td><td>34000.0</td><td>39696.0</td><td>1984.8</td><td>0.000</td></tr>
+<tr><td>tac_usd_m</td><td>15800.0</td><td>15228.0</td><td>913.68</td><td>0.374</td></tr>
+<tr><td>total_revenue_usd_m</td><td>107500.0</td><td>109896.0</td><td>1648.44</td><td>0.000</td></tr>
+</tbody></table>
+
+<ul><li>概率：net_revenue_beat 0.55, eps_beat 0.5, Brier 0.2262。</li><li>one-off：equity gain 预测 36915.0 vs 实际 36915.0 （score 1.0）；core EPS 2.76 vs 2.76。</li><li>对账明细：{&quot;beat_miss_eps&quot;: 2.0, &quot;beat_miss_net_revenue&quot;: 2.0, &quot;diluted_eps_usd&quot;: 3.0, &quot;eps_pct_vs_consensus&quot;: 1.98, &quot;net_revenue_pct_vs_consensus&quot;: 1.916, &quot;net_revenue_usd_m&quot;: 3.0, &quot;tac_usd_m&quot;: 3.0, &quot;total_revenue_usd_m&quot;: 3.0}</li></ul>
+
+<h3>r14v3（score 29.13%）</h3>
+
+<ul><li>时长 176s，模型调用 33 次，controller actions 31 个（invalid 4 个）。</li><li>动作时间线（业务时钟，ET = UTC-4）：</li></ul>
+
+<table><thead><tr><th>t</th><th>时钟</th><th>action</th><th>ok</th></tr></thead><tbody>
+<tr><td>10</td><td>19:00:10Z</td><td>read</td><td>yes</td></tr>
+<tr><td>15</td><td>19:00:15Z</td><td>catalog</td><td>yes</td></tr>
+<tr><td>30</td><td>19:00:30Z</td><td>query</td><td>yes</td></tr>
+<tr><td>45</td><td>19:00:45Z</td><td>query</td><td>yes</td></tr>
+<tr><td>45</td><td>19:00:45Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>60</td><td>19:01:00Z</td><td>query</td><td>yes</td></tr>
+<tr><td>60</td><td>19:01:00Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>70</td><td>19:01:10Z</td><td>read</td><td>yes</td></tr>
+<tr><td>70</td><td>19:01:10Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>80</td><td>19:01:20Z</td><td>read</td><td>yes</td></tr>
+<tr><td>95</td><td>19:01:35Z</td><td>query</td><td>yes</td></tr>
+<tr><td>110</td><td>19:01:50Z</td><td>query</td><td>yes</td></tr>
+<tr><td>125</td><td>19:02:05Z</td><td>query</td><td>yes</td></tr>
+<tr><td>140</td><td>19:02:20Z</td><td>query</td><td>yes</td></tr>
+<tr><td>140</td><td>19:02:20Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>155</td><td>19:02:35Z</td><td>query</td><td>yes</td></tr>
+<tr><td>165</td><td>19:02:45Z</td><td>read</td><td>yes</td></tr>
+<tr><td>180</td><td>19:03:00Z</td><td>query</td><td>yes</td></tr>
+<tr><td>195</td><td>19:03:15Z</td><td>query</td><td>yes</td></tr>
+<tr><td>195</td><td>19:03:15Z</td><td>None</td><td>no</td></tr>
+<tr><td>205</td><td>19:03:25Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>3600</td><td>20:00:00Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>3615</td><td>20:00:15Z</td><td>query</td><td>yes</td></tr>
+<tr><td>3695</td><td>20:01:35Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>3705</td><td>20:01:45Z</td><td>read</td><td>yes</td></tr>
+<tr><td>3715</td><td>20:01:55Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>21731</td><td>01:02:11Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>21741</td><td>01:02:21Z</td><td>read</td><td>yes</td></tr>
+<tr><td>21756</td><td>01:02:36Z</td><td>query</td><td>yes</td></tr>
+<tr><td>21766</td><td>01:02:46Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>23400</td><td>01:30:00Z</td><td>wait</td><td>yes</td></tr>
+</tbody></table>
+
+<ul><li>盘前九指标预测 vs 实际（forecast_composite 明细）：</li></ul>
+
+<table><thead><tr><th>指标</th><th>预测</th><th>实际</th><th>容差</th><th>得分</th></tr></thead><tbody>
+<tr><td>diluted_eps_ex_oneoffs_usd</td><td>2.45</td><td>2.76</td><td>0.3</td><td>0.000</td></tr>
+<tr><td>google_cloud_operating_income_usd_m</td><td>4350.0</td><td>6598.0</td><td>527.84</td><td>0.000</td></tr>
+<tr><td>google_cloud_revenue_usd_m</td><td>17000.0</td><td>20028.0</td><td>1602.24</td><td>0.000</td></tr>
+<tr><td>google_services_operating_income_usd_m</td><td>36400.0</td><td>40589.0</td><td>2029.45</td><td>0.000</td></tr>
+<tr><td>google_services_revenue_usd_m</td><td>90400.0</td><td>89637.0</td><td>2689.11</td><td>0.716</td></tr>
+<tr><td>net_revenue_usd_m</td><td>91850.0</td><td>94668.0</td><td>2366.7</td><td>0.000</td></tr>
+<tr><td>operating_income_usd_m</td><td>35000.0</td><td>39696.0</td><td>1984.8</td><td>0.000</td></tr>
+<tr><td>tac_usd_m</td><td>15950.0</td><td>15228.0</td><td>913.68</td><td>0.210</td></tr>
+<tr><td>total_revenue_usd_m</td><td>107800.0</td><td>109896.0</td><td>1648.44</td><td>0.000</td></tr>
+</tbody></table>
+
+<ul><li>概率：net_revenue_beat 0.5, eps_beat 0.45, Brier 0.2762。</li><li>one-off：equity gain 预测 36915.0 vs 实际 36915.0 （score 1.0）；core EPS 2.76 vs 2.76。</li><li>对账明细：{&quot;beat_miss_eps&quot;: 2.0, &quot;beat_miss_net_revenue&quot;: 2.0, &quot;diluted_eps_usd&quot;: 3.0, &quot;eps_pct_vs_consensus&quot;: 1.98, &quot;net_revenue_pct_vs_consensus&quot;: 1.916, &quot;net_revenue_usd_m&quot;: 3.0, &quot;tac_usd_m&quot;: 3.0, &quot;total_revenue_usd_m&quot;: 3.0}</li></ul>
+
+<h3>r15v3（score 33.01%）</h3>
+
+<ul><li>时长 157s，模型调用 28 次，controller actions 26 个（invalid 2 个）。</li><li>动作时间线（业务时钟，ET = UTC-4）：</li></ul>
+
+<table><thead><tr><th>t</th><th>时钟</th><th>action</th><th>ok</th></tr></thead><tbody>
+<tr><td>10</td><td>19:00:10Z</td><td>read</td><td>yes</td></tr>
+<tr><td>15</td><td>19:00:15Z</td><td>catalog</td><td>yes</td></tr>
+<tr><td>30</td><td>19:00:30Z</td><td>query</td><td>yes</td></tr>
+<tr><td>45</td><td>19:00:45Z</td><td>query</td><td>yes</td></tr>
+<tr><td>60</td><td>19:01:00Z</td><td>query</td><td>yes</td></tr>
+<tr><td>60</td><td>19:01:00Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>70</td><td>19:01:10Z</td><td>read</td><td>yes</td></tr>
+<tr><td>70</td><td>19:01:10Z</td><td>None</td><td>no</td></tr>
+<tr><td>85</td><td>19:01:25Z</td><td>query</td><td>yes</td></tr>
+<tr><td>100</td><td>19:01:40Z</td><td>query</td><td>yes</td></tr>
+<tr><td>115</td><td>19:01:55Z</td><td>query</td><td>yes</td></tr>
+<tr><td>130</td><td>19:02:10Z</td><td>query</td><td>yes</td></tr>
+<tr><td>130</td><td>19:02:10Z</td><td>invalid</td><td>no</td></tr>
+<tr><td>140</td><td>19:02:20Z</td><td>read</td><td>yes</td></tr>
+<tr><td>155</td><td>19:02:35Z</td><td>query</td><td>yes</td></tr>
+<tr><td>170</td><td>19:02:50Z</td><td>query</td><td>yes</td></tr>
+<tr><td>180</td><td>19:03:00Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>3600</td><td>20:00:00Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>3615</td><td>20:00:15Z</td><td>query</td><td>yes</td></tr>
+<tr><td>3695</td><td>20:01:35Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>3705</td><td>20:01:45Z</td><td>read</td><td>yes</td></tr>
+<tr><td>3715</td><td>20:01:55Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>21731</td><td>01:02:11Z</td><td>wait</td><td>yes</td></tr>
+<tr><td>21741</td><td>01:02:21Z</td><td>read</td><td>yes</td></tr>
+<tr><td>21751</td><td>01:02:31Z</td><td>submit</td><td>yes</td></tr>
+<tr><td>23400</td><td>01:30:00Z</td><td>wait</td><td>yes</td></tr>
+</tbody></table>
+
+<ul><li>盘前九指标预测 vs 实际（forecast_composite 明细）：</li></ul>
+
+<table><thead><tr><th>指标</th><th>预测</th><th>实际</th><th>容差</th><th>得分</th></tr></thead><tbody>
+<tr><td>diluted_eps_ex_oneoffs_usd</td><td>2.48</td><td>2.76</td><td>0.3</td><td>0.067</td></tr>
+<tr><td>google_cloud_operating_income_usd_m</td><td>4200.0</td><td>6598.0</td><td>527.84</td><td>0.000</td></tr>
+<tr><td>google_cloud_revenue_usd_m</td><td>17000.0</td><td>20028.0</td><td>1602.24</td><td>0.000</td></tr>
+<tr><td>google_services_operating_income_usd_m</td><td>36300.0</td><td>40589.0</td><td>2029.45</td><td>0.000</td></tr>
+<tr><td>google_services_revenue_usd_m</td><td>89800.0</td><td>89637.0</td><td>2689.11</td><td>0.939</td></tr>
+<tr><td>net_revenue_usd_m</td><td>91700.0</td><td>94668.0</td><td>2366.7</td><td>0.000</td></tr>
+<tr><td>operating_income_usd_m</td><td>35500.0</td><td>39696.0</td><td>1984.8</td><td>0.000</td></tr>
+<tr><td>tac_usd_m</td><td>15800.0</td><td>15228.0</td><td>913.68</td><td>0.374</td></tr>
+<tr><td>total_revenue_usd_m</td><td>107500.0</td><td>109896.0</td><td>1648.44</td><td>0.000</td></tr>
+</tbody></table>
+
+<ul><li>概率：net_revenue_beat 0.52, eps_beat 0.55, Brier 0.2164。</li><li>one-off：equity gain 预测 36915.0 vs 实际 36915.0 （score 1.0）；core EPS 2.76 vs 2.76。</li><li>对账明细：{&quot;beat_miss_eps&quot;: 2.0, &quot;beat_miss_net_revenue&quot;: 2.0, &quot;diluted_eps_usd&quot;: 3.0, &quot;eps_pct_vs_consensus&quot;: 1.98, &quot;net_revenue_pct_vs_consensus&quot;: 1.916, &quot;net_revenue_usd_m&quot;: 3.0, &quot;tac_usd_m&quot;: 3.0, &quot;total_revenue_usd_m&quot;: 3.0}</li></ul>
+
+<h2>6. 为什么这是能力型低分，而不是环境/协议误差</h2>
+
+<ul><li>校准中发现的协议问题（DeepSeek-V4.1-Flash 偶发原生工具调用标记 <code>&lt;｜｜DSML｜｜ calls&gt;</code>、在 JSON 后追加幻觉 &quot;User:&quot; 轮次）已记录在案：r2（34.7%）与 r6（3.0%）属于协议失败，<b>已从难度证据中排除</b>。bench 侧 <code>harnesses/json_action</code> 随后增加 DSML→action 转换与“取回复中第一个 JSON 对象”的容错，并把 assistant 历史规范化为 action JSON；最终 r10–r12 的 invalid 动作占比已降到 3/29、0/31、7/30（见 §5），不再影响提交完整性。</li><li>最终三次的 timeliness 全部 1.0、audit_integrity 全部 1.0、reconciliation/tenq 均 &gt;0.98：说明模型能按时、按规完成值班与交叉核对；低分来自 forecast 对真实披露的预测误差（见 §5 明细），即真正的能力瓶颈。</li><li>三份独立验证（docs/validation/）确认：数据真实、时间边界机械可验、参考解 16 个动作可完成全流程；旧版本真值泄漏（manual 示例泄漏 109896.0/36.12）与不可达 forecast 已修复，并新增单测防止回归。</li></ul>
+
+<h2>7. 难度机制（用户允许措施内的加难记录）</h2>
+
+<p>1. 把评分主导权交给 9 指标 forecast（74/100），且指标覆盖模型最容易保守化/拍脑袋的部分（net revenue、TAC、Cloud、segment op income）；</p>
+<p>2. 真实 peer 噪声：MSFT/META/AMZN 2026-04-29 盘后 8-K EX-99.1 真实文本同晚公开，但与本任务无关，需 agent 自行排除；</p>
+<p>3. prompt 收敛为 5 行（角色/班次/manual 指引/预算），不列步骤与判分细节，manual 是唯一协议入口；</p>
+<p>4. 提取/对账/时间管理类 check 权重压到 3+3+2+1+2；rubric 只保留 5+5 权重的语义证据与逻辑；</p>
+<p>5. 审计收紧：未发布读取、未实际 read 的引用、rejected submit 均罚分（防“猜中”与投机）。</p>
+
+<h2>8. 可解性与公平性证据</h2>
+
+<ul><li>参考解（solvability subagent）：用 agent 可见数据独立推导全部计分字段，16 个动作完成三阶段提交（预算 120），单调 deterministic 分在修复后为满分；报告 <code>docs/validation/solvability-review.md</code>。</li><li>realism review 的阻塞项（manual 泄漏、10-Q 无法验证 segment、设计-实现不一致）已全部修复；anti-leak review 的时间边界断言（30 filings / 6 docs / 20,777 facts / 718 prices / 4 consensus / 12 events）全部通过，且绕过测试套件拒绝写/ATTACH/PRAGMA/扩展/路径穿越。</li><li>单测：<code>python3 -m unittest tests.test_equity_event_judge -v</code> → 8 tests OK（perfect=1.0、deadline 边界、未读引用扣分、未来引用扣分、Brier、真值 token 扫描、workspace 无 judge 材料）。</li></ul>
+
+<h2>9. 残余风险与使用条件</h2>
+
+<p>1. 预训练知识无法机械消除；已选 2026-04 事件并实测该模型&quot;不知道&quot;，但不构成绝对保证。</p>
+<p>2. market.db 物理含未来行，由 data service 强制门控；workspace/trusted-local 信任链之外的运行方需自行评估。</p>
+<p>3. evidence 由 controller 导出，judge 审计 citation/read 历史；平台之外伪造需信任链假设。</p>
+<p>4. LLM rubric 有采样方差；权重已压到 10/100，三次重复与轨迹复核均已保留。</p>
+
+<p>使用条件：固定本仓库当前 commit + LiteEval ≥90ed715 + community.json-action + deepseek-flash；保留原始 rollout 记录与 judge 输出；跨版本分数不混算。</p>
+
+<h2>10. 复现与文件索引</h2>
+
+<ul><li>Case：<code>tasks/equity-event-001/</code>（task.toml、prompt.md、desk/manual.md、workflow-fixtures/scenario.json、judge/verify_ingest.py、judge/rubric_evidence.json、judge/rubric_logic.json、data/、provenance/）</li><li>Workflow：<code>workflows/equity-event-stream/</code>（controller.py、engine.py、data_service.py、harness.toml）</li><li>Agent harness：<code>harnesses/json_action/</code>；DB 构建：<code>tasks/equity-event-001/build_equity_event_db.py</code></li><li>单测：<code>tests/test_equity_event_judge.py</code>；设计：<code>docs/design/equity-event-stream-case-design.md</code>；验证：<code>docs/validation/</code>；难度校验：<code>docs/validation/UNIFIED-ASSESSMENT.md</code></li></ul>
+
+<p>复现命令（需平台连接；每条 rollout 独立打包以避免并行导入冲突）：</p>
+
+<pre>
+export LITEEVAL_SECRET_KEY=$(cat data/secrets/master.key)   # from your LiteEval checkout
+.venv/bin/liteeval benchmark validate <repo>
+.venv/bin/liteeval harness <repo>/workflows/equity-event-stream --project &lt;PROJECT&gt;
+.venv/bin/liteeval harness <repo>/harnesses/json_action --project &lt;PROJECT&gt;
+.venv/bin/liteeval benchmark import &lt;单任务包&gt; --project &lt;PROJECT&gt;
+.venv/bin/liteeval benchmark run &lt;RELEASE&gt; --project &lt;PROJECT&gt; --agent-harness &lt;AGENT_REV&gt; \
+  --workflow-harness &lt;WF_REV&gt; --target-connection &lt;CONN&gt; --judge-connection &lt;CONN&gt; --trusted-local
+</pre>
+
+<p>最终 rollout 记录：<code><workdir>/ee_run_r13v3.json</code> / <code>r14v3</code> / <code>r15v3</code>（execution id 见 §4）；历史记录：<code><workdir>/ee_run_*.json</code>。</p>
+
+<h2>附录 A：最终三次 check 明细（含 reason）</h2>
+
+<h3>r13v3 — score 38.61%</h3>
+
+<table><thead><tr><th>check</th><th>outcome</th><th>score</th><th>weight</th><th>reason</th></tr></thead><tbody>
+<tr><td>forecast_composite</td><td>fail</td><td>0.2461</td><td>74</td><td>forecast_composite score 0.2461 (weight 74)</td></tr>
+<tr><td>probabilities</td><td>fail</td><td>0.8869</td><td>5</td><td>probabilities score 0.8869 (weight 5)</td></tr>
+<tr><td>one_off_analysis</td><td>pass</td><td>1.0000</td><td>3</td><td>one_off_analysis score 1.0000 (weight 3)</td></tr>
+<tr><td>reconciliation_actuals</td><td>fail</td><td>0.9948</td><td>3</td><td>reconciliation_actuals score 0.9948 (weight 3)</td></tr>
+<tr><td>tenq_verification</td><td>fail</td><td>0.9863</td><td>2</td><td>tenq_verification score 0.9863 (weight 2)</td></tr>
+<tr><td>timeliness</td><td>pass</td><td>1.0000</td><td>1</td><td>timeliness score 1.0000 (weight 1)</td></tr>
+<tr><td>audit_integrity</td><td>pass</td><td>1.0000</td><td>2</td><td>audit_integrity score 1.0000 (weight 2)</td></tr>
+<tr><td>evidence_chain</td><td>fail</td><td>0.5000</td><td>5</td><td>Deterministic per-criterion aggregation</td></tr>
+<tr><td>analysis_logic</td><td>fail</td><td>0.5000</td><td>5</td><td>Deterministic per-criterion aggregation</td></tr>
+</tbody></table>
+
+<h3>r14v3 — score 29.13%</h3>
+
+<table><thead><tr><th>check</th><th>outcome</th><th>score</th><th>weight</th><th>reason</th></tr></thead><tbody>
+<tr><td>forecast_composite</td><td>fail</td><td>0.1029</td><td>74</td><td>forecast_composite score 0.1029 (weight 74)</td></tr>
+<tr><td>probabilities</td><td>fail</td><td>0.8619</td><td>5</td><td>probabilities score 0.8619 (weight 5)</td></tr>
+<tr><td>one_off_analysis</td><td>pass</td><td>1.0000</td><td>3</td><td>one_off_analysis score 1.0000 (weight 3)</td></tr>
+<tr><td>reconciliation_actuals</td><td>fail</td><td>0.9948</td><td>3</td><td>reconciliation_actuals score 0.9948 (weight 3)</td></tr>
+<tr><td>tenq_verification</td><td>fail</td><td>0.9863</td><td>2</td><td>tenq_verification score 0.9863 (weight 2)</td></tr>
+<tr><td>timeliness</td><td>pass</td><td>1.0000</td><td>1</td><td>timeliness score 1.0000 (weight 1)</td></tr>
+<tr><td>audit_integrity</td><td>pass</td><td>1.0000</td><td>2</td><td>audit_integrity score 1.0000 (weight 2)</td></tr>
+<tr><td>evidence_chain</td><td>fail</td><td>0.7500</td><td>5</td><td>Deterministic per-criterion aggregation</td></tr>
+<tr><td>analysis_logic</td><td>fail</td><td>0.5000</td><td>5</td><td>Deterministic per-criterion aggregation</td></tr>
+</tbody></table>
+
+<h3>r15v3 — score 33.01%</h3>
+
+<table><thead><tr><th>check</th><th>outcome</th><th>score</th><th>weight</th><th>reason</th></tr></thead><tbody>
+<tr><td>forecast_composite</td><td>fail</td><td>0.1533</td><td>74</td><td>forecast_composite score 0.1533 (weight 74)</td></tr>
+<tr><td>probabilities</td><td>fail</td><td>0.8918</td><td>5</td><td>probabilities score 0.8918 (weight 5)</td></tr>
+<tr><td>one_off_analysis</td><td>pass</td><td>1.0000</td><td>3</td><td>one_off_analysis score 1.0000 (weight 3)</td></tr>
+<tr><td>reconciliation_actuals</td><td>fail</td><td>0.9948</td><td>3</td><td>reconciliation_actuals score 0.9948 (weight 3)</td></tr>
+<tr><td>tenq_verification</td><td>fail</td><td>0.9863</td><td>2</td><td>tenq_verification score 0.9863 (weight 2)</td></tr>
+<tr><td>timeliness</td><td>pass</td><td>1.0000</td><td>1</td><td>timeliness score 1.0000 (weight 1)</td></tr>
+<tr><td>audit_integrity</td><td>pass</td><td>1.0000</td><td>2</td><td>audit_integrity score 1.0000 (weight 2)</td></tr>
+<tr><td>evidence_chain</td><td>fail</td><td>0.7500</td><td>5</td><td>Deterministic per-criterion aggregation</td></tr>
+<tr><td>analysis_logic</td><td>fail</td><td>0.5000</td><td>5</td><td>Deterministic per-criterion aggregation</td></tr>
+</tbody></table>
+
+
+</body></html>

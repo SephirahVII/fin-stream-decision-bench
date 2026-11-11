@@ -1,0 +1,140 @@
+{
+ "schema_version": 1,
+ "case_id": "equity-event-001",
+ "description": "Provenance for the shipped extraction artifacts. Each entry records the source URL and the deterministic transformation used; raw HTML/documents are not shipped but are re-downloadable with provenance/dl.py + fetch_extra.py. The full extraction workspace manifest is provenance/EXTRACTION_MANIFEST.json.",
+ "information_shift_utc": "2026-04-29T19:00:00Z",
+ "files": {
+  "data/filings.csv": {
+   "sha256": "3c11fc4cdb134492bbcd0fe5bef9d3223874150181da742840667599356b9429",
+   "bytes": 1713,
+   "source_url": "https://data.sec.gov/submissions/CIK0001652044.json",
+   "note": "SEC EDGAR submission history for Alphabet Inc. (CIK 0001652044); filing rows filtered to the 5 filings used by this case."
+  },
+  "data/filing_documents.csv": {
+   "sha256": "cf5311b6c839dcbc4280fe84c2be06075a1bc3f9fa1bda40ffcff43665fbaf12",
+   "bytes": 1336,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/",
+   "note": "Index of the six cleaned filing texts in data/docs/. Each text carries its own SEC Archives source URL in its header line."
+  },
+  "data/docs/000043_ex99_1.txt": {
+   "sha256": "7395b8af384e9a474e2348a64141b2956ade6964da5469d4270c584820a3d718",
+   "bytes": 23655,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000043/googexhibit991q12026.htm",
+   "note": "8-K EX-99.1 earnings release, accepted 2026-04-29T20:01:35Z; HTML converted deterministically to section-marked text (no LLM)."
+  },
+  "data/docs/000043_primary.txt": {
+   "sha256": "22ef4d69398f203628349f1fa3eb0819ba75eab8844bace1a0e4d2fb6e3e1eed",
+   "bytes": 5289,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000043/goog-20260429.htm",
+   "note": "8-K primary document, accepted 2026-04-29T20:01:35Z; deterministic text conversion."
+  },
+  "data/docs/000048_primary.txt": {
+   "sha256": "f270ee734f3df653e8535d069a1b51b16221afa5b75c0f991bf822f48839bc38",
+   "bytes": 22950,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm",
+   "note": "Form 10-Q for period 2026-03-31, accepted 2026-04-30T01:02:11Z; selected sections converted deterministically."
+  },
+  "data/docs/000018_primary.txt": {
+   "sha256": "2c132c13aac822b95a0aabb5acbe98572da6d7f092db44837da54f5b9f2f2c96",
+   "bytes": 17206,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+   "note": "Form 10-K for FY2025, accepted 2026-02-05T02:56:03Z; selected sections converted deterministically."
+  },
+  "data/docs/000031_primary.txt": {
+   "sha256": "9dc6ef843a1d79c4ad4a69aa509c843cc358de0b0bb72d9a92e869c0c76cb2e7",
+   "bytes": 4697,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000031/",
+   "note": "8-K accepted 2026-04-02T20:18:28Z (item 5.02 controller resignation); deterministic text conversion."
+  },
+  "data/docs/000034_primary.txt": {
+   "sha256": "091c791bb5d5c99c8d6760aac8eb68e6a20fb268ce8e5787ecb41e1e00d6f3d3",
+   "bytes": 8554,
+   "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000034/",
+   "note": "8-K accepted 2026-04-10T20:16:53Z (executive awards); deterministic text conversion."
+  },
+  "data/xbrl_facts.csv": {
+   "sha256": "f1bbb2c7093ad9a94531ecfaaa256b8bb5bf2042349dc82e97d1e37222995ab2",
+   "bytes": 4116496,
+   "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001652044.json",
+   "note": "us-gaap company facts extracted from SEC companyfacts API on the build date; 622 facts with period_end after 2026-03-31 excluded to avoid forward information."
+  },
+  "data/consensus.csv": {
+   "sha256": "2de2f781d1fad1f76ea26d9cdde04ffeda23ac28ed9e1395520e44d9a805fc44",
+   "bytes": 1311,
+   "source_url": "https://huggingface.co/datasets/HenryJ12/InvestorLastExam",
+   "note": "Frozen sell-side consensus for Q1 2026: Zacks Consensus Estimate as quoted in Investor's Last Exam task O19 news document 9c05375c-3fdd-43ea-941d-240072a010b2 (published 2026-03-17). Judge-side benchmark; surfaced to the agent through the market database as-of 2026-03-17."
+  },
+  "data/prices.csv": {
+   "sha256": "731d1c103363f08f043572f150b83aaeb3c25e1ce88d2b9daba778acaedf7b8c",
+   "bytes": 65311,
+   "source_url": "https://query2.finance.yahoo.com/v8/finance/chart/GOOGL",
+   "note": "Yahoo Finance daily OHLCV for GOOGL, 2024-01-02..2026-11-10; available_at_s derived from the 16:00 America/New_York close with DST handling."
+  },
+  "data/returns_visible_pre_shift.csv": {
+   "sha256": "3114423546f2dddaf014e26d6b442f2775e4b6c8e4a46b74c876452e733081c1",
+   "bytes": 45472,
+   "source_url": "derived from data/prices.csv",
+   "note": "Simple and adjusted-close daily returns; first row blank by construction."
+  },
+  "data/peers.csv": {
+   "sha256": "1a07b7ccb159a48475d59df265a1c83774d0ed28e0a697a414a49d603269d306",
+   "bytes": 5403,
+   "source_url": "https://data.sec.gov/submissions/",
+   "note": "Metadata-only rows for 8 mega-cap technology peers (MSFT, META, AMZN, AAPL, NVDA, TSLA, ORCL, INTC): 8-K/10-Q filings accepted 2026-04-01..2026-05-05, including the same-evening peer earnings releases. No peer text is shipped."
+  },
+  "judge/provenance/o19_ground_truth.json": {
+   "sha256": "2129923e51c796d83bff9e7f14b9cabbaa524434c8b6db7d2d67175effc84bd8",
+   "bytes": 5775,
+   "source_url": "https://huggingface.co/datasets/HenryJ12/InvestorLastExam",
+   "note": "Judge-side targets copied from Investor's Last Exam task O19 (Alphabet consensus gaps and earnings surprises) for provenance only; never exposed to the agent."
+  },
+  "provenance/dl.py": {
+   "sha256": "69770e82680285f52cdec1bd343dc518a3acdcc83e3ac83a67cd5cde73872d3c",
+   "bytes": 3323,
+   "source_url": "local authoring script",
+   "note": "Downloads the SEC/EDGAR raw artifacts for the shift."
+  },
+  "provenance/fetch_extra.py": {
+   "sha256": "5dd028b11b9b106a921d6f1bc09ae1b2ce8dc80650fc5a321d1cc1eaff6ba044",
+   "bytes": 2821,
+   "source_url": "local authoring script",
+   "note": "Downloads XBRL companyfacts, Yahoo prices and peer submission metadata."
+  },
+  "provenance/html2txt.py": {
+   "sha256": "5cd71334e45299cf03abb384c6a5e962b340e394b5642b4aea9f703deb26c31e",
+   "bytes": 2975,
+   "source_url": "local authoring script",
+   "note": "Deterministic HTML-to-text conversion with section markers; no LLM."
+  },
+  "provenance/build.py": {
+   "sha256": "cdab2139df0f078a51291eef3dce31fcbc9a73861b82dfc0fc82ed8f7fa53410",
+   "bytes": 42085,
+   "source_url": "local authoring script",
+   "note": "Builds data/*.csv and the availability times from the raw artifacts."
+  },
+  "provenance/validate.py": {
+   "sha256": "04797ebfaf8308034440f66ca14fda2b518c5ab2cf6c094c7a3d375d6c33c943",
+   "bytes": 4684,
+   "source_url": "local authoring script",
+   "note": "Independent assertion suite over the extracted data (295 checks)."
+  },
+  "provenance/sub_meta.json": {
+   "sha256": "55f21e416a107bcebd52cfab339ec259da14b87faca683257364eb9efe4538b5",
+   "bytes": 2132,
+   "source_url": "local authoring metadata",
+   "note": "PIK/acceptance metadata cache used by fetch_extra.py."
+  },
+  "provenance/EXTRACTION_REPORT.md": {
+   "sha256": "a0a85a6a276d34f89400c1cc44ff848fc2993ee2e40e24eb210ecde412ec5630",
+   "bytes": 14861,
+   "source_url": "local authoring report",
+   "note": "Extraction report: sources, transformations, discrepancies, reproduction commands."
+  },
+  "provenance/EXTRACTION_MANIFEST.json": {
+   "sha256": "ade94ff932d52f8bfb0d0148c6933b8b69d413dd411fc85689f4e45b8be1e209",
+   "bytes": 14642,
+   "source_url": "local authoring manifest",
+   "note": "Full extraction-workspace manifest (49 files incl. non-shipped raw/ under /tmp); shipped subset is listed in data/PROVENANCE.json."
+  }
+ }
+}

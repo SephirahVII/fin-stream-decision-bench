@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this benchmark, please cite it as below."
+title: "fin-stream-decision-bench: evaluating timely, auditable agent decisions over continuously updating financial data streams"
+version: 1.3.1
+date-released: 2026-11-11
+authors:
+  - family-names: "Wang"
+    given-names: "Wayne"
+    alias: "SephirahVII"
+repository-code: "https://github.com/SephirahVII/fin-stream-decision-bench"
+url: "https://github.com/SephirahVII/fin-stream-decision-bench"
+license: "Apache-2.0"
+keywords:
+  - agent evaluation
+  - benchmark
+  - financial decision making
+  - event stream
+  - time and state
+  - look-ahead prevention
+  - SEC filings
+  - LLM agents
+abstract: >-
+  A benchmark for AI agents that must make timely, auditable decisions over continuously updating
+  financial data streams. One case is one continuous duty shift: filings, margin calls, payment
+  notices and market data are released on a business clock; agents must forecast, reconcile, verify
+  and act before each window closes, and an offline deterministic judge re-computes the frozen
+  evidence. The flagship case reconstructs Alphabet's Q1 2026 earnings night from real SEC EDGAR
+  filings and prices, with database-level publication-time gating (available_at_s) and a
+  nine-metric pre-earnings forecast. Calibrated difficulty: three independent rollouts with
+  DeepSeek-V4.1-Flash score 38.61% / 29.13% / 33.01% (target band ≤40%).

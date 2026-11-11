@@ -1,0 +1,275 @@
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm#balance_sheet
+form: 10-K | accession: 0001652044-26-000018 | accepted_at_utc: 2026-02-05T02:56:03Z | document: goog-20251231.htm (10-K)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: balance_sheet =====
+CONSOLIDATED BALANCE SHEETS
+(in millions, except par value per share amounts)
+As of December 31,
+2024 | 2025
+Assets
+Current assets:
+Cash and cash equivalents | $ | 23,466 | $ | 30,708
+Marketable securities | 72,191 | 96,135
+Total cash, cash equivalents, and marketable securities | 95,657 | 126,843
+Accounts receivable, net | 52,340 | 62,886
+Other current assets | 15,714 | 16,309
+Total current assets | 163,711 | 206,038
+Non-marketable securities | 37,982 | 68,687
+Deferred income taxes | 17,180 | 9,113
+Property and equipment, net | 171,036 | 246,597
+Operating lease assets | 13,588 | 15,221
+Goodwill | 31,885 | 33,380
+Other non-current assets | 14,874 | 16,245
+Total assets | $ | 450,256 | $ | 595,281
+Liabilities and Stockholders’ Equity
+Current liabilities:
+Accounts payable | $ | 7,987 | $ | 12,200
+Accrued compensation and benefits | 15,069 | 17,546
+Accrued expenses and other current liabilities | 51,228 | 55,557
+Accrued revenue share | 9,802 | 10,864
+Deferred revenue | 5,036 | 6,578
+Total current liabilities | 89,122 | 102,745
+Long-term debt | 10,883 | 46,547
+Income taxes payable, non-current | 8,782 | 9,531
+Operating lease liabilities | 11,691 | 12,744
+Other long-term liabilities | 4,694 | 8,449
+Total liabilities | 125,172 | 180,016
+Commitments and Contingencies (Note 10)
+Stockholders’ equity:
+Preferred stock, $0.001 par value per share, 100 shares authorized; no shares issued and outstanding
+0 | 0
+Class A, Class B, and Class C stock and additional paid-in capital, $0.001 par value per share: 300,000 shares authorized (Class A 180,000, Class B 60,000, Class C 60,000); 12,211 (Class A 5,835, Class B 861, Class C 5,515) and 12,088 (Class A 5,822, Class B 837, Class C 5,429) shares issued and outstanding
+84,800 | 93,126
+Accumulated other comprehensive income (loss) | (4,800) | (1,916)
+Retained earnings | 245,084 | 324,055
+Total stockholders’ equity | 325,084 | 415,265
+Total liabilities and stockholders’ equity | $ | 450,256 | $ | 595,281
+See accompanying notes.
+48.
+Table of Contents
+Alphabet Inc.
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm#income_statement
+form: 10-K | accession: 0001652044-26-000018 | accepted_at_utc: 2026-02-05T02:56:03Z | document: goog-20251231.htm (10-K)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: income_statement =====
+CONSOLIDATED STATEMENTS OF INCOME
+(in millions, except per share amounts)
+Year Ended December 31,
+2023 | 2024 | 2025
+Revenues | $ | 307,394 | $ | 350,018 | $ | 402,836
+Costs and expenses:
+Cost of revenues | 133,332 | 146,306 | 162,535
+Research and development | 45,427 | 49,326 | 61,087
+Sales and marketing | 27,917 | 27,808 | 28,693
+General and administrative | 16,425 | 14,188 | 21,482
+Total costs and expenses | 223,101 | 237,628 | 273,797
+Income from operations | 84,293 | 112,390 | 129,039
+Other income (expense), net | 1,424 | 7,425 | 29,787
+Income before income taxes | 85,717 | 119,815 | 158,826
+Provision for income taxes | 11,922 | 19,697 | 26,656
+Net income | $ | 73,795 | $ | 100,118 | $ | 132,170
+Basic net income per share (Note 12)
+$ | 5.84 | $ | 8.13 | $ | 10.91
+Diluted net income per share (Note 12)
+$ | 5.80 | $ | 8.04 | $ | 10.81
+See accompanying notes.
+49.
+Table of Contents
+Alphabet Inc.
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm#cash_flows
+form: 10-K | accession: 0001652044-26-000018 | accepted_at_utc: 2026-02-05T02:56:03Z | document: goog-20251231.htm (10-K)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: cash_flows =====
+CONSOLIDATED STATEMENTS OF CASH FLOWS
+(in millions)
+Year Ended December 31,
+2023 | 2024 | 2025
+Operating activities
+Net income | $ | 73,795 | $ | 100,118 | $ | 132,170
+Adjustments:
+Depreciation of property and equipment | 11,946 | 15,311 | 21,136
+Stock-based compensation expense | 22,460 | 22,785 | 24,953
+Deferred income taxes | (7,763) | (5,257) | 8,348
+Loss (gain) on debt and equity securities, net | 823 | (2,671) | (24,620)
+Other | 4,330 | 3,419 | 2,108
+Changes in assets and liabilities, net of effects of acquisitions:
+Accounts receivable, net | (7,833) | (5,891) | (8,779)
+Income taxes, net | 523 | (2,418) | (3,226)
+Other assets | (2,143) | (1,397) | (4,542)
+Accounts payable | 664 | 359 | 907
+Accrued expenses and other liabilities | 3,937 | (1,161) | 12,939
+Accrued revenue share | 482 | 1,059 | 899
+Deferred revenue | 525 | 1,043 | 2,420
+Net cash provided by operating activities | 101,746 | 125,299 | 164,713
+Investing activities
+Purchases of property and equipment | (32,251) | (52,535) | (91,447)
+Purchases of marketable securities | (77,858) | (86,679) | (103,773)
+Maturities and sales of marketable securities | 86,672 | 103,428 | 83,240
+Purchases of non-marketable securities | (3,027) | (5,034) | (5,716)
+Maturities and sales of non-marketable securities | 947 | 882 | 1,367
+Acquisitions, net of cash acquired, and purchases of intangible assets | (495) | (2,931) | (1,592)
+Other investing activities | (1,051) | (2,667) | (2,370)
+Net cash used in investing activities | (27,063) | (45,536) | (120,291)
+Financing activities
+Net payments related to stock-based award activities | (9,837) | (12,190) | (14,167)
+Repurchases of stock | (61,504) | (62,222) | (45,709)
+Dividend payments | 0 | (7,363) | (10,049)
+Proceeds from issuance of debt, net of costs | 10,790 | 13,589 | 64,564
+Repayments of debt | (11,550) | (12,701) | (32,427)
+Proceeds from sale of interest in consolidated entities, net | 8 | 1,154 | 400
+Net cash used in financing activities | (72,093) | (79,733) | (37,388)
+Effect of exchange rate changes on cash and cash equivalents | (421) | (612) | 208
+Net increase (decrease) in cash and cash equivalents | 2,169 | (582) | 7,242
+Cash and cash equivalents at beginning of period | 21,879 | 24,048 | 23,466
+Cash and cash equivalents at end of period | $ | 24,048 | $ | 23,466 | $ | 30,708
+Supplemental disclosures of non-cash investing activities:
+Purchases of property and equipment included in accrued liabilities and accounts payable | $ | 7,435 | $ | 10,326 | $ | 15,090
+See accompanying notes.
+52.
+Table of Contents
+Alphabet Inc.
+NOTES TO CONSOLIDATED FINANCIAL STATEMENTS
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm#note_15_segments
+form: 10-K | accession: 0001652044-26-000018 | accepted_at_utc: 2026-02-05T02:56:03Z | document: goog-20251231.htm (10-K)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: note_15_segments =====
+Note 15. Information about Segments and Geographic Areas
+We report our segment results as Google Services, Google Cloud, and Other Bets:
+•Google Services includes products and services such as ads, Android, Chrome, devices, Google Maps, Google Play, Search, and YouTube. Google Services generates revenues primarily from advertising; fees received for consumer subscription-based products such as YouTube TV, YouTube Music and Premium, and NFL Sunday Ticket, as well as Google One; the sale of apps and in-app purchases; and devices.
+•Google Cloud includes infrastructure and platform services, applications, and other services for enterprise customers. Google Cloud generates revenues primarily from consumption-based fees and subscriptions received for Google Cloud Platform services, Google Workspace communication and collaboration tools, and other enterprise services.
+86.
+Table of Contents
+Alphabet Inc.
+•Other Bets is a combination of multiple operating segments that are not individually material. Revenues from Other Bets are generated primarily from the sale of autonomous transportation services and internet services.
+Revenues, certain costs, such as costs associated with content and traffic acquisition, certain engineering activities, and devices, as well as certain operating expenses are directly attributable to our segments. Due to the integrated nature of Alphabet, other costs and expenses, such as technical infrastructure and office facilities, are managed centrally at a consolidated level. These costs, including the associated depreciation, are allocated to operating segments as a service cost generally based on usage, headcount, or revenue.
+Certain costs are not allocated to our segments because they represent Alphabet-level activities. These costs primarily include:
+•certain AI-focused shared research and development activities, including employee compensation expenses and technical infrastructure usage costs associated with the development of our general AI models;
+•corporate initiatives such as our philanthropic activities; and
+•corporate shared costs such as certain finance, human resource, and legal costs, including certain fines and settlements.
+Charges associated with employee severance and office space reductions are also not allocated to our segments. Additionally, hedging gains (losses) related to revenue are not allocated to our segments.
+Our Chief Operating Decision Maker (CODM) is our Chief Executive Officer, Sundar Pichai. Our CODM uses segment operating income (loss) to allocate resources to our segments in our annual planning process and to assess the performance of our segments, primarily by monitoring actual results versus the annual plan. Our operating segments are not evaluated using asset information.
+The following table presents revenue, profitability, and expense information about our segments (in millions):
+Year Ended December 31,
+2023 | 2024 | 2025
+Revenues:
+Google Services | $ | 272,543 | $ | 304,930 | $ | 342,721
+Google Cloud | 33,088 | 43,229 | 58,705
+Other Bets | 1,527 | 1,648 | 1,537
+Hedging gains (losses) | 236 | 211 | (127)
+Total revenues | $ | 307,394 | $ | 350,018 | $ | 402,836
+Operating income (loss):
+Google Services
+$ | 95,858 | $ | 121,263 | $ | 139,404
+Google Cloud | 1,716 | 6,112 | 13,910
+Other Bets | (4,095) | (4,444) | (7,515)
+Alphabet-level activities
+(9,186) | (10,541) | (16,760)
+Total income from operations | $ | 84,293 | $ | 112,390 | $ | 129,039
+Supplemental information about segment expenses:
+Google Services:
+Employee compensation expenses
+$ | 46,224 | $ | 44,560 | $ | 45,124
+Other costs and expenses
+130,461 | 139,107 | 158,193
+Total Google Services costs and expenses
+$ | 176,685 | $ | 183,667 | $ | 203,317
+Google Cloud:
+Employee compensation expenses
+$ | 19,054 | $ | 20,519 | $ | 22,078
+Other costs and expenses
+12,318 | 16,598 | 22,717
+Total Google Cloud costs and expenses
+$ | 31,372 | $ | 37,117 | $ | 44,795
+87.
+Table of Contents
+Alphabet Inc.
+Google Services and Google Cloud employee compensation expenses include the costs associated with direct and allocated employees. Google Services and Google Cloud other costs and expenses primarily include direct costs, such as advertising and promotional activities, legal and other matters, and third-party services fees as well as allocated costs, such as technical infrastructure and office facilities usage costs. Additionally, Google Services other costs and expenses include content and traffic acquisition costs and device costs.
+See Note 2 for further details relating to revenues by geography.
+The following table presents long-lived assets by geographic area, which includes property and equipment, net and operating lease assets (in millions):
+As of December 31,
+2024 | 2025
+Long-lived assets:
+United States | $ | 138,993 | $ | 195,337
+International | 45,631 | 66,481
+Total long-lived assets | $ | 184,624 | $ | 261,818
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm#mda_financial_results
+form: 10-K | accession: 0001652044-26-000018 | accepted_at_utc: 2026-02-05T02:56:03Z | document: goog-20251231.htm (10-K)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: mda_financial_results =====
+Financial Results
+Revenues
+The following table presents revenues by type (in millions):
+Year Ended December 31,
+2024 | 2025
+Google Search & other | $ | 198,084 | $ | 224,532
+YouTube ads | 36,147 | 40,367
+Google Network | 30,359 | 29,792
+Google advertising | 264,590 | 294,691
+Google subscriptions, platforms, and devices
+40,340 | 48,030
+Google Services total | 304,930 | 342,721
+Google Cloud | 43,229 | 58,705
+Other Bets | 1,648 | 1,537
+Hedging gains (losses) | 211 | (127)
+Total revenues | $ | 350,018 | $ | 402,836
+Google Services
+Google Advertising
+Google Search & other
+Google Search & other revenues increased $26.4 billion from 2024 to 2025. The overall growth was driven by interrelated factors including increases in search queries resulting from growth in user adoption and usage on mobile devices; growth in advertiser spending; and improvements we have made in ad formats and delivery.
+33.
+Table of Contents
+Alphabet Inc.
+YouTube ads
+YouTube ads revenues increased $4.2 billion from 2024 to 2025. The growth was driven by our direct response advertising products followed by our brand advertising products, both of which benefited from increased spending by our advertisers.
+Google Network
+Google Network revenues decreased $567 million from 2024 to 2025, primarily due to a decrease in AdSense revenues, partially offset by an increase in AdMob revenues.
+Monetization Metrics
+The following table presents changes in monetization metrics for Google Search & other revenues (paid clicks and cost-per-click) and Google Network revenues (impressions and cost-per-impression), expressed as a percentage, from 2024 to 2025:
+Google Search & other
+Paid clicks change | 6 | %
+Cost-per-click change | 7 | %
+Google Network
+Impressions change
+(7) | %
+Cost-per-impression change
+7 | %
+Changes in paid clicks and impressions are driven by a number of interrelated factors, including changes in advertiser spending; ongoing product and policy changes; and, as it relates to paid clicks, fluctuations in search queries resulting from changes in user adoption and usage, primarily on mobile devices.
+Changes in cost-per-click and cost-per-impression are driven by a number of interrelated factors including changes in device mix, geographic mix, advertiser spending, ongoing product and policy changes, product mix, property mix, and changes in foreign currency exchange rates.
+Google Subscriptions, Platforms, and Devices
+Google subscriptions, platforms, and devices revenues increased $7.7 billion from 2024 to 2025. The growth was primarily driven by an increase in subscriptions revenues. This increase was primarily due to the contribution from growth in paid subscriptions across both YouTube services and Google One.
+Google Cloud
+Google Cloud revenues increased $15.5 billion from 2024 to 2025, primarily driven by growth in Google Cloud Platform largely from infrastructure and platform services.
+Revenues by Geography
+The following table presents revenues by geography as a percentage of revenues, determined based on the addresses of our customers:
+Year Ended December 31,
+2024 | 2025
+United States | 49 | % | 48 | %
+EMEA(1)
+29 | % | 29 | %
+APAC(1)
+16 | % | 17 | %
+Other Americas(1)
+6 | % | 6 | %
+Hedging gains (losses) | 0 | % | 0 | %
+(1) Regions represent Europe, the Middle East, and Africa (EMEA); Asia-Pacific (APAC); and Canada and Latin America ("Other Americas").
+For additional information, see Note 2 of the Notes to Consolidated Financial Statements included in Item 8 of this Annual Report on Form 10-K.
+Costs and Expenses
+34.
+Table of Contents
+Alphabet Inc.
+Cost of Revenues
+The following table presents cost of revenues, including TAC (in millions, except percentages):
+Year Ended December 31,
+2024 | 2025
+TAC | $ | 54,900 | $ | 59,926
+Other cost of revenues | 91,406 | 102,609
+Total cost of revenues | $ | 146,306 | $ | 162,535
+Total cost of revenues as a percentage of revenues | 42 | % | 40 | %
+Cost of revenues increased $16.2 billion from 2024 to 2025 due to an increase in other cost of revenues and TAC of $11.2 billion and $5.0 billion, respectively.
+The increase in TAC from 2024 to 2025 was largely due to an increase in TAC paid to distribution partners, primarily driven by growth in revenues subject to TAC. The TAC rate decreased from 20.7% to 20.3% from 2024 to 2025, primarily due to a revenue mix shift from Google Network properties to Google Search & other properties. The TAC rates on Google Search & other and Google Network revenues were substantially consistent from 2024 to 2025.
+The increase in other cost of revenues from 2024 to 2025 was primarily due to increases in content acquisition costs, largely for YouTube, depreciation expense, and other technical infrastructure operations costs.
+

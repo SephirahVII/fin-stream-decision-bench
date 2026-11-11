@@ -1,0 +1,363 @@
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm#cover
+form: 10-Q | accession: 0001652044-26-000048 | accepted_at_utc: 2026-04-30T01:02:11Z | document: goog-20260331.htm (10-Q)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: cover =====
+UNITED STATES
+SECURITIES AND EXCHANGE COMMISSION
+Washington, D.C. 20549
+________________________________________________________________________________________
+FORM 10-Q
+_______________________________________________________________________________________
+(Mark One)
+☒ | QUARTERLY REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934
+For the quarterly period ended March 31, 2026
+OR
+☐ | TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934
+For the transition period from _______ to _______
+Commission file number: 001-37580
+________________________________________________________________________________________
+Alphabet Inc.
+(Exact name of registrant as specified in its charter)
+________________________________________________________________________________________
+Delaware | 61-1767919
+(State or other jurisdiction of incorporation or organization) | (I.R.S. Employer Identification Number)
+1600 Amphitheatre Parkway
+Mountain View, CA 94043
+(Address of principal executive offices, including zip code)
+(650) 253-0000
+(Registrant's telephone number, including area code)
+Securities registered pursuant to Section 12(b) of the Act:
+Title of each class | Trading Symbol(s) | Name of each exchange on which registered
+Class A Common Stock, $0.001 par value | GOOGL | Nasdaq Stock Market LLC
+(Nasdaq Global Select Market)
+Class C Capital Stock, $0.001 par value | GOOG | Nasdaq Stock Market LLC
+(Nasdaq Global Select Market)
+2.375% Senior Notes due 2028 | — | Nasdaq Stock Market LLC
+2.500% Senior Notes due 2029
+— | Nasdaq Stock Market LLC
+4.125% Senior Notes due 2029 | — | Nasdaq Stock Market LLC
+2.875% Senior Notes due 2031
+— | Nasdaq Stock Market LLC
+4.625% Senior Notes due 2032 | — | Nasdaq Stock Market LLC
+3.000% Senior Notes due 2033
+— | Nasdaq Stock Market LLC
+3.125% Senior Notes due 2034
+— | Nasdaq Stock Market LLC
+3.375% Senior Notes due 2037
+— | Nasdaq Stock Market LLC
+3.500% Senior Notes due 2038
+— | Nasdaq Stock Market LLC
+5.500% Senior Notes due 2041 | — | Nasdaq Stock Market LLC
+4.000% Senior Notes due 2044
+— | Nasdaq Stock Market LLC
+3.875% Senior Notes due 2045
+— | Nasdaq Stock Market LLC
+4.000% Senior Notes due 2054
+— | Nasdaq Stock Market LLC
+5.875% Senior Notes due 2058 | — | Nasdaq Stock Market LLC
+4.375% Senior Notes due 2064
+— | Nasdaq Stock Market LLC
+6.125% Senior Notes due 2126 | — | Nasdaq Stock Market LLC
+________________________________________________________________________________________
+Indicate by check mark whether the registrant: (1) has filed all reports required to be filed by Section 13 or 15(d) of the Securities Exchange Act of 1934 during the preceding 12 months (or for such shorter period that the registrant was required to file such reports), and (2) has been subject to such filing requirements for the past 90 days. Yes ☒ No ☐
+Indicate by check mark whether the registrant has submitted electronically every Interactive Data File required to be submitted pursuant to Rule 405 of Regulation S-T (§232.405 of this chapter) during the preceding 12 months (or for such shorter period that the registrant was required to submit such files). Yes ☒ No ☐
+Indicate by check mark whether the registrant is a large accelerated filer, an accelerated filer, a non-accelerated filer, a smaller reporting company, or an emerging growth company. See the definitions of “large accelerated filer,” “accelerated filer,” “smaller reporting company,” and "emerging growth company" in Rule 12b-2 of the Exchange Act.
+Large accelerated filer | ☒ | Accelerated filer | ☐
+Non-accelerated filer | ☐ | Smaller reporting company | ☐
+Emerging growth company | ☐
+If an emerging growth company, indicate by check mark if the registrant has elected not to use the extended transition period for complying with any new or revised financial accounting standards provided pursuant to Section 13(a) of the Exchange Act. ☐
+Indicate by check mark whether the registrant is a shell company (as defined in Rule 12b-2 of the Exchange Act). Yes ☐ No ☒
+As of April 22, 2026, there were 5,824 million shares of Alphabet’s Class A stock outstanding, 836 million shares of Alphabet's Class B stock outstanding, and 5,456 million shares of Alphabet's Class C stock outstanding.
+1
+Table of Contents
+Alphabet Inc.
+Form 10-Q
+For the Quarterly Period Ended March 31, 2026
+TABLE OF CONTENTS
+Page No.
+Note About Forward-Looking Statements
+3
+PART I. FINANCIAL INFORMATION
+Item 1
+Financial Statements
+4
+Consolidated Balance Sheets - December 31, 2025 and March 31, 2026
+4
+Consolidated Statements of Income - Three Months Ended March 31, 2025 and 2026
+5
+Consolidated Statements of Comprehensive Income - Three Months Ended March 31, 2025 and 2026
+6
+Consolidated Statements of Stockholders' Equity - Three Months Ended March 31, 2025 and 2026
+7
+Consolidated Statements of Cash Flows - Three Months Ended March 31, 2025 and 2026
+8
+Notes to Consolidated Financial Statements
+9
+Item 2
+Management’s Discussion and Analysis of Financial Condition and Results of Operations
+35
+Item 3
+Quantitative and Qualitative Disclosures About Market Risk
+48
+Item 4
+Controls and Procedures
+48
+PART II. OTHER INFORMATION
+Item 1
+Legal Proceedings
+49
+Item 1A
+Risk Factors
+49
+Item 2
+Unregistered Sales of Equity Securities and Use of Proceeds
+50
+Item 5
+Other Information
+50
+Item 6
+Exhibits
+51
+Signatures
+53
+2
+Table of Contents
+Alphabet Inc.
+Note About Forward-Looking Statements
+This Quarterly Report on Form 10-Q contains forward-looking statements within the meaning of the Private Securities Litigation Reform Act of 1995. Forward-looking statements generally can be identified by words such as, but not limited to, "anticipates," "believes," "could," "estimates," "expects," "intends," "may," "plans," "predicts," "projects," "will be," "will continue," "will likely result," and similar expressions. These include, among other things, expectations regarding the growth of our business and revenues, including factors that may impact such growth, and fluctuations in our revenues and margins; statements relating to plans, expectations, and trends about our core business metrics, costs and expenses, capital expenditures, sources of funding, products and services, strategic business transactions, and other aspects of our business operations and strategies; statements regarding the global macroeconomic and regulatory environment; as well as other statements regarding our future operations, financial condition and prospects, and actual or potential risk and liability exposures. Forward-looking statements may appear throughout this report and other documents we file with the Securities and Exchange Commission (SEC), including without limitation, the following sections: Part I, Item 2, "Management's Discussion and Analysis of Financial Condition and Results of Operations" in this Quarterly Report on Form 10-Q and Part I, Item 1A, “Risk Factors” in our Annual Report on Form 10-K for the fiscal year ended December 31, 2025, as updated in this Quarterly Report on Form 10-Q. These forward-looking statements are based on current expectations and assumptions that are subject to risks and uncertainties, which could cause our actual results to differ materially from those reflected in the forward-looking statements. Factors that could cause or contribute to such differences include, but are not limited to, those discussed in this Quarterly Report on Form 10-Q; the risks discussed in Part I, Item 1A, "Risk Factors" in our Annual Report on Form 10-K for the fiscal year ended December 31, 2025, as updated in this Quarterly Report on Form 10-Q; and the trends discussed in Part II, Item 7, "Management's Discussion and Analysis of Financial Condition and Results of Operations" in our Annual Report on Form 10-K for the fiscal year ended December 31, 2025; and those discussed in other documents we file with the SEC. We undertake no obligation to revise or publicly release the results of any revision to these forward-looking statements, except as required by law. Given these risks and uncertainties, readers are cautioned not to place undue reliance on such forward-looking statements.
+As used herein, "Alphabet," "the company," "we," "us," "our," and similar terms include Alphabet Inc. and its subsidiaries, unless the context indicates otherwise.
+"Alphabet," "Google," and other trademarks of ours appearing in this report are our property. We do not intend our use or display of other companies' trade names or trademarks to imply an endorsement or sponsorship of us by such companies, or any relationship with any of these companies.
+3
+Table of Contents
+Alphabet Inc.
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm#balance_sheet
+form: 10-Q | accession: 0001652044-26-000048 | accepted_at_utc: 2026-04-30T01:02:11Z | document: goog-20260331.htm (10-Q)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: balance_sheet =====
+CONSOLIDATED BALANCE SHEETS
+(in millions, except par value per share amounts)
+As of
+December 31, 2025 | As of
+March 31, 2026
+(unaudited)
+Assets
+Current assets:
+Cash and cash equivalents | $ | 30,708 | $ | 38,063
+Marketable securities | 96,135 | 88,777
+Total cash, cash equivalents, and marketable securities | 126,843 | 126,840
+Accounts receivable, net | 62,886 | 62,999
+Other current assets | 16,309 | 23,914
+Total current assets | 206,038 | 213,753
+Non-marketable securities | 68,687 | 106,946
+Deferred income taxes | 9,113 | 1,995
+Property and equipment, net | 246,597 | 281,020
+Operating lease assets | 15,221 | 15,509
+Goodwill | 33,380 | 57,774
+Intangible assets, net | 1,283 | 9,444
+Other non-current assets | 14,962 | 17,478
+Total assets | $ | 595,281 | $ | 703,919
+Liabilities and Stockholders’ Equity
+Current liabilities:
+Accounts payable | $ | 12,200 | $ | 16,852
+Accrued compensation and benefits | 17,546 | 13,947
+Accrued expenses and other current liabilities | 55,557 | 63,019
+Accrued revenue share | 10,864 | 10,208
+Deferred revenue | 6,578 | 7,162
+Total current liabilities | 102,745 | 111,188
+Long-term debt | 46,547 | 77,501
+Income taxes payable, non-current | 9,531 | 12,457
+Operating lease liabilities | 12,744 | 12,983
+Other long-term liabilities | 8,449 | 11,044
+Total liabilities | 180,016 | 225,173
+Commitments and Contingencies (Note 10)
+Stockholders’ equity:
+Preferred stock, $0.001 par value per share, 100 shares authorized; no shares issued and outstanding
+0 | 0
+Class A, Class B, and Class C stock and additional paid-in capital, $0.001 par value per share: 300,000 shares authorized (Class A 180,000, Class B 60,000, Class C 60,000); 12,088 (Class A 5,822, Class B 837, Class C 5,429) and 12,116 (Class A 5,824, Class B 836, Class C 5,456) shares issued and outstanding
+93,126 | 96,902
+Accumulated other comprehensive income (loss) | (1,916) | (2,180)
+Retained earnings | 324,055 | 384,024
+Total stockholders’ equity | 415,265 | 478,746
+Total liabilities and stockholders’ equity | $ | 595,281 | $ | 703,919
+See accompanying notes.
+4
+Table of Contents
+Alphabet Inc.
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm#income_statement
+form: 10-Q | accession: 0001652044-26-000048 | accepted_at_utc: 2026-04-30T01:02:11Z | document: goog-20260331.htm (10-Q)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: income_statement =====
+CONSOLIDATED STATEMENTS OF INCOME
+(in millions, except per share amounts; unaudited)
+Three Months Ended
+March 31,
+2025 | 2026
+Revenues | $ | 90,234 | $ | 109,896
+Costs and expenses:
+Cost of revenues | 36,361 | 41,271
+Research and development | 13,556 | 17,032
+Sales and marketing | 6,172 | 7,606
+General and administrative | 3,539 | 4,291
+Total costs and expenses | 59,628 | 70,200
+Income from operations | 30,606 | 39,696
+Other income (expense), net | 11,183 | 37,716
+Income before income taxes | 41,789 | 77,412
+Provision for income taxes | 7,249 | 14,834
+Net income | $ | 34,540 | $ | 62,578
+Basic net income per share (Note 12)
+$ | 2.84 | $ | 5.17
+Diluted net income per share (Note 12)
+$ | 2.81 | $ | 5.11
+See accompanying notes.
+5
+Table of Contents
+Alphabet Inc.
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm#cash_flows
+form: 10-Q | accession: 0001652044-26-000048 | accepted_at_utc: 2026-04-30T01:02:11Z | document: goog-20260331.htm (10-Q)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: cash_flows =====
+CONSOLIDATED STATEMENTS OF CASH FLOWS
+(in millions; unaudited)
+Three Months Ended
+March 31,
+2025 | 2026
+Operating activities
+Net income | $ | 34,540 | $ | 62,578
+Adjustments:
+Depreciation of property and equipment | 4,487 | 6,482
+Stock-based compensation expense | 5,516 | 6,751
+Deferred income taxes | (1,152) | 6,920
+Loss (gain) on debt and equity securities, net | (9,960) | (36,804)
+Other | 481 | 1,265
+Changes in assets and liabilities, net of effects of acquisitions:
+Accounts receivable, net | 1,638 | (363)
+Income taxes, net | 7,197 | 8,101
+Other assets | (1,288) | (3,403)
+Accounts payable | (880) | (240)
+Accrued expenses and other liabilities | (4,929) | (6,002)
+Deferred revenue | 500 | 505
+Net cash provided by operating activities | 36,150 | 45,790
+Investing activities
+Purchases of property and equipment | (17,197) | (35,674)
+Purchases of marketable securities | (18,453) | (31,041)
+Maturities and sales of marketable securities | 20,345 | 38,001
+Purchases of non-marketable securities | (958) | (906)
+Maturities and sales of non-marketable securities | 259 | 848
+Acquisitions, net of cash acquired, and purchases of intangible assets | (340) | (33,621)
+Other investing activities | 150 | (996)
+Net cash used in investing activities | (16,194) | (63,389)
+Financing activities
+Net payments related to stock-based award activities | (3,110) | (5,483)
+Repurchases of stock | (15,068) | 0
+Dividend payments | (2,434) | (2,542)
+Proceeds from issuance of debt, net of costs | 4,532 | 31,379
+Repayments of debt | (4,521) | (1,477)
+Proceeds from sale of interest in consolidated entities, net | 400 | 3,200
+Net cash provided by (used in) financing activities | (20,201) | 25,077
+Effect of exchange rate changes on cash and cash equivalents | 43 | (123)
+Net increase (decrease) in cash and cash equivalents | (202) | 7,355
+Cash and cash equivalents at beginning of period | 23,466 | 30,708
+Cash and cash equivalents at end of period | $ | 23,264 | $ | 38,063
+Supplemental disclosures of non-cash investing activities:
+Property and equipment included in accrued liabilities and accounts payable
+$ | 11,388 | $ | 24,131
+See accompanying notes.
+8
+Table of Contents
+Alphabet Inc.
+NOTES TO CONSOLIDATED FINANCIAL STATEMENTS
+(Unaudited)
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm#note_2_revenues
+form: 10-Q | accession: 0001652044-26-000048 | accepted_at_utc: 2026-04-30T01:02:11Z | document: goog-20260331.htm (10-Q)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: note_2_revenues =====
+Note 2. Revenues
+Disaggregated Revenues
+The following table presents revenues disaggregated by type (in millions):
+Three Months Ended
+March 31,
+2025 | 2026
+Google Search & other | $ | 50,702 | $ | 60,399
+YouTube ads | 8,927 | 9,883
+Google Network | 7,256 | 6,971
+Google advertising | 66,885 | 77,253
+Google subscriptions, platforms, and devices
+10,379 | 12,384
+Google Services total | 77,264 | 89,637
+Google Cloud | 12,260 | 20,028
+Other Bets | 450 | 411
+Hedging gains (losses) | 260 | (180)
+Total revenues | $ | 90,234 | $ | 109,896
+The following table presents revenues disaggregated by geography, based on the addresses of our customers (in millions):
+Three Months Ended
+March 31,
+2025 | 2026
+United States | $ | 43,964 | 49 | % | $ | 53,975 | 49 | %
+EMEA(1)
+25,923 | 29 | 31,468 | 28
+APAC(1)
+14,854 | 16 | 18,288 | 17
+Other Americas(1)
+5,233 | 6 | 6,345 | 6
+Hedging gains (losses) | 260 | 0 | (180) | 0
+Total revenues | $ | 90,234 | 100 | % | $ | 109,896 | 100 | %
+(1) Regions represent Europe, the Middle East, and Africa (EMEA); Asia-Pacific (APAC); and Canada and Latin America ("Other Americas").
+10
+Table of Contents
+Alphabet Inc.
+Revenue Backlog
+As of March 31, 2026, we had $467.6 billion of remaining performance obligations (“revenue backlog”), of which $462.3 billion related to Google Cloud. Revenue backlog represents commitments in customer contracts that have not yet been recognized as revenue. We expect to recognize just over 50% of the revenue backlog as revenues over the next 24 months with the remainder to be recognized thereafter. The estimated revenue backlog and timing of revenue recognition for these commitments is largely driven by contract duration, our ability to deliver in accordance with relevant contract terms, and when our customers utilize services. Revenue backlog includes related deferred revenue currently recorded as well as amounts that will be invoiced in future periods and excludes cancellable contracts and payments we make to our customers not expected to be in exchange for distinct goods and services. In the first quarter of 2026, we elected to change our reporting of revenue backlog to now also include contracts with an original expected term of one year or less. As of March 31, 2026, the portion of our revenue backlog related to contracts with an original expected term of one year or less was approximately $7.3 billion.
+Deferred Revenues
+We record deferred revenues when cash payments are received or due in advance of our performance, including amounts which are refundable. Deferred revenues primarily relate to Google Cloud and Google subscriptions, platforms, and devices. Total deferred revenue as of December 31, 2025 was $8.6 billion, of which $3.5 billion was recognized as revenues for the three months ended March 31, 2026. Total deferred revenue as of March 31, 2026 was $9.8 billion.
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm#mda_revenues_by_type
+form: 10-Q | accession: 0001652044-26-000048 | accepted_at_utc: 2026-04-30T01:02:11Z | document: goog-20260331.htm (10-Q)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: mda_revenues_by_type =====
+The following table presents revenues by type (in millions):
+Three Months Ended
+March 31,
+2025 | 2026
+Google Search & other | $ | 50,702 | $ | 60,399
+YouTube ads | 8,927 | 9,883
+Google Network | 7,256 | 6,971
+Google advertising | 66,885 | 77,253
+Google subscriptions, platforms, and devices
+10,379 | 12,384
+Google Services total | 77,264 | 89,637
+Google Cloud | 12,260 | 20,028
+Other Bets | 450 | 411
+Hedging gains (losses) | 260 | (180)
+Total revenues | $ | 90,234 | $ | 109,896
+Google Services
+Google Advertising
+Google Search & other
+Google Search & other revenues increased $9.7 billion from the three months ended March 31, 2025 to the three months ended March 31, 2026. The overall growth was driven by interrelated factors including increases in search queries resulting from growth in user adoption and usage on mobile devices; growth in advertiser spending; and improvements we have made in ad formats and delivery. Additionally, Google Search & other revenues were favorably affected by changes in foreign currency exchange rates for the three months ended March 31, 2026.
+YouTube ads
+YouTube ads revenues increased $956 million from the three months ended March 31, 2025 to the three months ended March 31, 2026. The growth was driven by our direct response advertising products followed by our brand advertising products, both of which benefited from increased spending by our advertisers.
+Google Network
+Google Network revenues decreased $285 million from the three months ended March 31, 2025 to the three months ended March 31, 2026, primarily due to a decrease in AdSense revenues, partially offset by an increase in AdMob revenues.
+
+source: https://www.sec.gov/Archives/edgar/data/1652044/000165204426000048/goog-20260331.htm#mda_cost_of_revenues
+form: 10-Q | accession: 0001652044-26-000048 | accepted_at_utc: 2026-04-30T01:02:11Z | document: goog-20260331.htm (10-Q)
+note: plain text converted from the filing HTML without an LLM; tables are rendered as ' | '-separated rows, numbers are unchanged.
+===== SECTION: mda_cost_of_revenues =====
+Cost of Revenues
+The following table presents cost of revenues, including TAC (in millions, except percentages):
+Three Months Ended
+March 31,
+2025 | 2026
+TAC | $ | 13,748 | $ | 15,228
+Other cost of revenues | 22,613 | 26,043
+Total cost of revenues | $ | 36,361 | $ | 41,271
+Total cost of revenues as a percentage of revenues | 40 | % | 38 | %
+Cost of revenues increased $4.9 billion from the three months ended March 31, 2025 to the three months ended March 31, 2026 due to an increase in other cost of revenues and TAC of $3.4 billion and $1.5 billion, respectively.
+The increase in TAC from the three months ended March 31, 2025 to the three months ended March 31, 2026 was largely due to an increase in TAC paid to distribution partners, primarily driven by growth in revenues subject to TAC. The TAC rate decreased from 20.6% to 19.7% from the three months ended March 31, 2025 to the three months ended March 31, 2026, primarily due to a revenue mix shift from Google Network properties to Google Search & other properties. The TAC rates on Google Search & other revenues was substantially consistent from the three months ended March 31, 2025 to the three months ended March 31, 2026. The TAC rates on Google Network revenues reflected a slight increase from the three months ended March 31, 2025 to the three months ended March 31, 2026 due to a combination of factors, none of which were individually significant.
+The increase in other cost of revenues from the three months ended March 31, 2025 to the three months ended March 31, 2026 was primarily due to increases in depreciation expense, content acquisition costs, largely for
+41
+YouTube, and employee compensation expenses, partially offset by an accrual reversal for digital services tax related to the recently repealed law in Canada.
+

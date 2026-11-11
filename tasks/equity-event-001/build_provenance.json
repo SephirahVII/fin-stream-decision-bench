@@ -1,0 +1,36 @@
+{
+ "case_id": "equity-event-001",
+ "subject": "Alphabet Inc. (GOOGL, CIK 1652044) Q1 2026 earnings evening",
+ "built_for_shift_utc": "2026-04-29T15:00:00-04:00",
+ "epoch_utc": "2026-04-29T19:00:00Z",
+ "shift_end_s": 23400,
+ "availability_rule": "available_at_s = max(0, seconds between source publication time and 2026-04-29T19:00:00Z); tool filters rows with available_at_s <= business_time_s",
+ "sources": {
+  "filings_and_documents": "SEC EDGAR filings for CIK 1652044 (acceptance timestamps from data.sec.gov submissions)",
+  "xbrl_facts": "SEC companyfacts CIK0001652044 (us-gaap facts, period_end <= 2026-03-31; 622 post-event facts excluded upstream)",
+  "prices": "Yahoo Finance chart API daily bars for GOOGL",
+  "consensus": "Zacks consensus figures (91.69 USD bn net revenue, 2.76 USD EPS) as quoted in ILE task O19 news document, published 2026-03-17",
+  "peers": "SEC EDGAR submissions for 8 large-cap peers (filings metadata only)"
+ },
+ "counts": {
+  "issuers": 9,
+  "filings": 30,
+  "filing_documents": 9,
+  "xbrl_facts": 20777,
+  "consensus_estimates": 4,
+  "prices": 718,
+  "issuer_events": 12
+ },
+ "data_files": {
+  "PROVENANCE.json": "cdd6da7bb1832da04d5e4f27f7a3734a4ef2e481ce83c2a95a3ab3b756b85751",
+  "consensus.csv": "2de2f781d1fad1f76ea26d9cdde04ffeda23ac28ed9e1395520e44d9a805fc44",
+  "filing_documents.csv": "88a382501cbb54153cf04987b6a18b05454a612b1fe00727066514caaaab06b3",
+  "filings.csv": "3c11fc4cdb134492bbcd0fe5bef9d3223874150181da742840667599356b9429",
+  "peers.csv": "1a07b7ccb159a48475d59df265a1c83774d0ed28e0a697a414a49d603269d306",
+  "prices.csv": "731d1c103363f08f043572f150b83aaeb3c25e1ce88d2b9daba778acaedf7b8c",
+  "returns_visible_pre_shift.csv": "3114423546f2dddaf014e26d6b442f2775e4b6c8e4a46b74c876452e733081c1",
+  "xbrl_facts.csv": "f1bbb2c7093ad9a94531ecfaaa256b8bb5bf2042349dc82e97d1e37222995ab2"
+ },
+ "db_sha256": "e164c4a4902ee62d7d2b8196646d83dbd440032ca31ed431d755f631d532982b",
+ "db_bytes": 3698688
+}

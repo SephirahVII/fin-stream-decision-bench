@@ -1,0 +1,121 @@
+schema_version = 1
+
+[task]
+id = "equity-event-001"
+title = "Equity event desk: Alphabet Q1 2026 earnings night"
+category = "financial-event-stream"
+
+[input]
+prompt_file = "prompt.md"
+
+[environment]
+initial_workspace = "environment/initial_workspace"
+
+[[artifacts]]
+path = "evidence/equity_event.json"
+required = true
+max_bytes = 8000000
+
+[budget]
+target_timeout_seconds = 2400
+judge_timeout_seconds = 180
+
+[workflow]
+id = "benchmark.equity-event-stream"
+fixture_file = "workflow-fixtures/scenario.json"
+outputs = ["evidence/equity_event.json"]
+
+[judge]
+ground_truth_file = "judge/ground_truth.json"
+
+[judge.aggregate]
+method = "weighted_mean"
+pass_threshold = 0.85
+
+[[judge.checks]]
+id = "forecast_composite"
+type = "command"
+entrypoint = "judge/verify_ingest.py"
+command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
+           "--submission", "/submission", "--result", "/judge-output/result.json",
+           "--check", "forecast_composite"]
+weight = 74
+must_pass = false
+
+[[judge.checks]]
+id = "probabilities"
+type = "command"
+entrypoint = "judge/verify_ingest.py"
+command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
+           "--submission", "/submission", "--result", "/judge-output/result.json",
+           "--check", "probabilities"]
+weight = 5
+must_pass = false
+
+[[judge.checks]]
+id = "one_off_analysis"
+type = "command"
+entrypoint = "judge/verify_ingest.py"
+command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
+           "--submission", "/submission", "--result", "/judge-output/result.json",
+           "--check", "one_off_analysis"]
+weight = 3
+must_pass = false
+
+[[judge.checks]]
+id = "reconciliation_actuals"
+type = "command"
+entrypoint = "judge/verify_ingest.py"
+command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
+           "--submission", "/submission", "--result", "/judge-output/result.json",
+           "--check", "reconciliation_actuals"]
+weight = 3
+must_pass = false
+
+[[judge.checks]]
+id = "tenq_verification"
+type = "command"
+entrypoint = "judge/verify_ingest.py"
+command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
+           "--submission", "/submission", "--result", "/judge-output/result.json",
+           "--check", "tenq_verification"]
+weight = 2
+must_pass = false
+
+[[judge.checks]]
+id = "timeliness"
+type = "command"
+entrypoint = "judge/verify_ingest.py"
+command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
+           "--submission", "/submission", "--result", "/judge-output/result.json",
+           "--check", "timeliness"]
+weight = 1
+must_pass = false
+
+[[judge.checks]]
+id = "audit_integrity"
+type = "command"
+entrypoint = "judge/verify_ingest.py"
+command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
+           "--submission", "/submission", "--result", "/judge-output/result.json",
+           "--check", "audit_integrity"]
+weight = 2
+must_pass = false
+
+[[judge.checks]]
+id = "evidence_chain"
+type = "llm_rubric"
+weight = 5
+must_pass = false
+connection_slot = "judge"
+rubric_file = "judge/rubric_evidence.json"
+submission_paths = ["evidence/equity_event.json"]
+
+[[judge.checks]]
+id = "analysis_logic"
+type = "llm_rubric"
+weight = 5
+must_pass = false
+connection_slot = "judge"
+rubric_file = "judge/rubric_logic.json"
+submission_paths = ["evidence/equity_event.json"]
