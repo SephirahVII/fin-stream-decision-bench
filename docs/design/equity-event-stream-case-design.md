@@ -1,12 +1,12 @@
 # Equity event stream case — 完整设计（equity-event-001，设计版本 1.1）
 
-- 状态：已实现并通过平台端到端 conformance（确定性 check 全 1.0），真实模型校准进行中。
-- 所属题包：`fin-stream-decision-bench` v1.2.0；workflow 控制器 `benchmark.equity-event-stream` v1.0.0。
-- 关联文档：`docs/design/financial-stress-benchmark-design.md`、`docs/calibration/source-treasury-*.md`、`docs/validation/{realism,anti-leak,solvability}-review.md`、`docs/proposals/implied-expectations-proto.md`。
+- 状态：已实现并通过平台端到端 conformance（确定性 check 全 1.0）与真实模型校准（v1.4.0 评分体系，5 个模型）。
+- 所属题包：`fin-stream-decision-bench` v1.4.1（单 case 分发；其它 family 为作者内部题库，未随本仓库分发）；workflow 控制器 `benchmark.equity-event-stream` v1.0.0。
+- 关联文档：`docs/validation/{realism,anti-leak,solvability}-review.md`、`docs/validation/UNIFIED-ASSESSMENT.md`、`docs/reports/equity-event-001-v3.3.1-report.md`、`docs/reports/equity-event-001-v1.4.0-multimodel.md`。
 
 ## 1. 定位
 
-既有的 event-stream 家族（LDI / treasury network / source treasury）教 Agent 在**多来源状态与真实截止时间**下做资金决策，但两个能力面偏弱：
+作者内部题库中的既有 event-stream 家族（LDI / treasury network / source treasury，未随本仓库分发）教 Agent 在**多来源状态与真实截止时间**下做资金决策，但两个能力面偏弱：
 
 1. 信息都是"给定"的：现金、义务、协议参数以结构化表格直接送达，Agent 主要做算术与执行；
 2. 缺少**真实世界披露时点**的约束：真实市场里信息是分批、带版本、带时滞到达的，且披露前任何"预测"都必须在信息不足下做出。
@@ -278,21 +278,19 @@ tests/test_equity_event_judge.py # judge 边界 + 防泄漏扫描
 
 复现：`python3 tasks/equity-event-001/build_equity_event_db.py` → `python3 -m unittest tests.test_equity_event_judge -v` → `liteeval benchmark validate .` → 平台注册 harness/import/run（命令见 README）。
 
-## 14. 其余 case 的基础设计
+## 14. 其余 case 的基础设计（不随本仓库分发）
 
-Case B / C / D 的基本数据与环境设计见 `docs/design/other-cases.md`：
-- B：通知核验与变更传导（source-treasury 后续候选，provisional/confirmed notice + 协议修订）；
+Case B / C / D 的基础设计保存在作者内部题库（未随本仓库分发）：
+- B：通知核验与变更传导（provisional/confirmed notice + 协议修订）；
 - C：ILE T1–T3 型静态定量多轮题（隐含增长、情景加权、EV→股权桥接，真实 filings 冻结 cutoff）；
 - D：O52 型 material event detection（48h 事件窗口 + 筛选表 + 修订预测 + 排序）。
-
-## 15. 参考
 
 ## 15. 参考
 
 - ILE: *Investor's Last Exam: Can AI Agents Do Equity Investment Without Seeing the Future?* arXiv 2610.38342；GitHub Prophetlab/Investor-Last-Exam；HF dataset HenryJ12/InvestorLastExam（任务 O19 提供本 case 的 consensus 与 ground truth 交叉验证）。
 - SEC EDGAR：8-K accession 0001652044-26-000043、10-Q 0001652044-26-000048、10-K 0001652044-26-000018；companyfacts API。
 - Yahoo Finance chart API（日线，2024-01-02..2026-11-10）。
-- 本仓库：`docs/validation/`（三份独立报告）、`docs/calibration/source-treasury-ANALYSIS.md`（同日历家族的校准方法）。
+- 本仓库：`docs/validation/`（三份独立报告与统一评估）、`docs/reports/`（评分改造与跨模型报告）。
 
 ---
 

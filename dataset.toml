@@ -1,11 +1,11 @@
 schema_version = 1
 [benchmark]
 id = "extreme-financial-events"
-version = "1.4.0"
-name = "Extreme financial events benchmark"
-description = "LDI acceptance trio, treasury network L8 baseline, source-reconstruction cases and the equity event-stream case"
+version = "1.4.1"
+name = "Equity event stream benchmark"
+description = "Single-case event-stream benchmark: Alphabet Q1 2026 earnings night — database-level publication gating, nine-metric pre-earnings forecast, 8-K reconciliation and 10-Q verification under a business clock"
 [tasks]
-include = ["tasks/*/task*.toml"]
+include = ["tasks/equity-event-001/task*.toml"]
 [defaults]
 environment_profile = "local"
 target_timeout_seconds = 2400

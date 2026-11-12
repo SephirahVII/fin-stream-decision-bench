@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use this benchmark, please cite it as below."
-title: "fin-stream-decision-bench: evaluating timely, auditable agent decisions over continuously updating financial data streams"
-version: 1.4.0
-date-released: 2026-11-12
+title: "fin-stream-decision-bench: a single-case benchmark for timely, auditable agent decisions over continuously updating financial data streams"
+version: 1.4.1
+date-released: 2026-11-13
 authors:
   - family-names: "Wang"
     given-names: "Wayne"
@@ -20,7 +20,7 @@ keywords:
   - SEC filings
   - LLM agents
 abstract: >-
-  A benchmark for AI agents that must make timely, auditable decisions over continuously updating
+  A single-case benchmark (v1.4.1 distribution contains only `equity-event-001`) for AI agents that must make timely, auditable decisions over continuously updating
   financial data streams. One case is one continuous duty shift: filings, margin calls, payment
   notices and market data are released on a business clock; agents must forecast, reconcile, verify
   and act before each window closes, and an offline deterministic judge re-computes the frozen
