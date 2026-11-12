@@ -1,3 +1,5 @@
+> **历史版本说明（2026-11-12）**：本报告对应 v1.3.1 权重（74/5/3/3/2/1/2/5/5）下的 3 次校准（38.61% / 29.13% / 33.01%）。v1.4.0 已进行评分体系改造（权重 55/5/2/2/2/1/2/10/13/8、BSS 概率、逐 submission 审计、三份 LLM rubric），最新结果与对比见 [`equity-event-001-v3.3.1-report.md`](equity-event-001-v3.3.1-report.md)；旧分数不与新版本混算。
+
 # equity-event-001 滚动评测报告：轨迹与得分
 
 Case：`equity-event-001`（Equity event desk: Alphabet Q1 2026 earnings night）  

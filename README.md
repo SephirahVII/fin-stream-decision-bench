@@ -11,7 +11,7 @@ All figures, prices and documents in the benchmark come from real public sources
 - **Time and state are first-class.** Information is only visible from its real publication time onward (`available_at_s` filtering on the database, not just a prompt instruction). Future materials cannot be pre-read; a correct analysis delivered after a deadline still fails.
 - **Lookahead is tested, not assumed.** Every case ships an anti-lookahead audit: citing an unpublished document, a document you did not actually read, or a future filing is penalised deterministically.
 - **Real data, real timestamps.** The flagship case is built from SEC EDGAR filings with their real acceptance timestamps, real Yahoo Finance daily bars and a frozen consensus snapshot.
-- **Calibrated difficulty.** Case variants and weights were calibrated on measured model runs; the flagship case targets the 30–40/100 band for a strong model + mature agent on a frozen harness.
+- **Measured difficulty, validity-first scoring.** Case variants and weights are calibrated on measured model runs. The flagship case reports its full distribution rather than a single target band; the v1.4.0 scoring refactor prioritises construct validity (see `docs/reports/equity-event-001-v3.3.1-report.md`) and does not tune weights to hit a predetermined threshold.
 
 ## Case families
 
@@ -22,7 +22,7 @@ Current release covers **8 cases across 4 workflow controllers** (business-clock
 | LDI duty | `ldi-margin-001/002/003` | 08:30–11:00 treasury liquidity duty; two branches share the pre-09:12 event stream, then diverge into repo rejection vs normal, with a calm-state control for false alarms | process acceptance |
 | Treasury network L8 | `treasury-duty` | multi-entity, multi-currency treasury: notice revisions, FX match failures, SSI changes, shared limits, debt repayment | operational baseline (Flash 100 / M3 61.39) |
 | Source treasury 0.3.0 | `source-treasury-stress/quiet/hedged` | no internal cash or forecast given — risk ledger must be reconstructed from bank records, trade registry, CSA agreements and market factors | calibration candidate (stress avg Flash 66.43 / M3 100; risk items tightened in v1.1.0) |
-| Equity event stream | `equity-event-001` | real SEC data: Alphabet Q1 2026 earnings night; SQL database + business-clock disclosure stream; pre-earnings forecast → post-release reconciliation → 10-Q verification | **calibrated: 29.13%–38.61% over 3 rollouts (≤40 target met)** |
+| Equity event stream | `equity-event-001` | real SEC data: Alphabet Q1 2026 earnings night; SQL database + business-clock disclosure stream; pre-earnings forecast → post-release reconciliation → 10-Q verification | **v1.4.0: validity-first scoring refactor; 6 scored rollouts, mean 43.14 ± 5.61 (final config 4 runs: 42.01 ± 1.50)** |
 
 ## Flagship case: `equity-event-001`
 
@@ -34,10 +34,13 @@ An on-duty equity research analyst covers **Alphabet's Q1 2026 earnings night (2
 
 The agent's workspace is a SQLite database containing filings, cleaned documents, 20k+ XBRL facts, daily prices, consensus estimates and issuer events. Every row carries `available_at_s`; the tool layer builds a filtered view for the current business time, so the future simply does not exist yet. Documents are served only after their real acceptance time, and reads/citations are audited.
 
-Scoring (100 points): nine-metric forecast composite **74**, beat/miss probabilities 5, one-off analysis 3, reconciliation 3, 10-Q verification 2, timeliness 1, audit integrity 2, plus two LLM-rubric items (evidence chain 5, analysis logic 5). Calibration with `deepseek-flash` on LiteEval `90ed715`, three independent rollouts: **38.61% / 29.13% / 33.01%** — all below the 40% bar.
+Scoring (100 points, v1.4.0): nine-metric forecast composite **55** (including an accounting-identity consistency term), beat/miss probabilities 5 (bounded Brier Skill Score — 0.5/0.5 scores 0), one-off analysis 2, reconciliation 2 (validates the candidate's own consensus and recomputes surprise/beat), 10-Q verification 2 (nine reported values), timeliness 1, audit integrity 2 (per-submission timestamps), plus three LLM-rubric items (evidence chain 10, analysis logic 13, handover quality 8 — the last one grades the verification-stage summary). There is **no `must_pass` gate** and the single-case failure does not zero the whole task; `pass_threshold` is 0.85.
+
+Calibration with `deepseek-flash` on LiteEval `90ed715` (six scored rollouts, identical model/harness/settings): **53.62 / 37.16 / 43.15 / 43.32 / 41.41 / 40.18** (mean 43.14, sd 5.61; final-configuration four: mean 42.01, sd 1.50). Applying the previous v1.3.1 weights to the same evidence gives mean 36.40 — the shift comes from weight reallocation toward analytical evidence (where the model does have measurable skill), not from loosening any criterion.
 
 - Full design (database, prompts, tools, execution chain, rubric, judge prompts): [`docs/design/equity-event-stream-case-design.md`](docs/design/equity-event-stream-case-design.md) *(Chinese)*
-- Rollout report with trajectories and per-check scores: [`docs/reports/equity-event-001-rollout-report.md`](docs/reports/equity-event-001-rollout-report.md) ([HTML](docs/reports/equity-event-001-rollout-report.html))
+- v1.4.0 scoring-refactor report (audit, per-file changes, scoring table, judge-variance and rollout comparison): [`docs/reports/equity-event-001-v3.3.1-report.md`](docs/reports/equity-event-001-v3.3.1-report.md) and [`docs/reports/equity-event-001-v3.3.1-audit.md`](docs/reports/equity-event-001-v3.3.1-audit.md)
+- Earlier v1.3.1 rollout report with trajectories and per-check scores: [`docs/reports/equity-event-001-rollout-report.md`](docs/reports/equity-event-001-rollout-report.md) ([HTML](docs/reports/equity-event-001-rollout-report.html))
 - Independent validation (realism / anti-lookahead / solvability): [`docs/validation/UNIFIED-ASSESSMENT.md`](docs/validation/UNIFIED-ASSESSMENT.md)
 
 ## Quickstart
@@ -118,10 +121,11 @@ docs/proposals/               future task-family proposals
 - The benchmark measures decision quality on frozen business-clock replays, not real-time execution latency; a model's thinking time does not advance the business clock.
 - Pretraining knowledge cannot be erased by access control. The flagship case mitigates this by (a) using issued-guidance era facts that were *not* in the tested model's memory (checked empirically) and (b) deterministic numeric tolerances; this remains a residual risk for other models.
 - Runs use the trusted-local workspace profile; the evidence journal is a trust boundary, not a cryptographic proof. The verifier assumes the controller-produced evidence is untampered (see the audit-integrity check and the validation reports).
-- LLM-rubric checks add sampling variance; they carry a minority of the weight (10/100 in the flagship case).
+- LLM-rubric checks add sampling variance (≈ ±1.5 pp on the flagship total per re-judge) and occasional stochastic judge errors; the platform marks such runs `unscored` rather than scoring them. The rubrics carry 31/100 in the v1.4.0 flagship scoring, so repeat runs and `scoring_coverage` should be reported.
 
 ## Version history
 
+- **v1.4.0** — validity-first scoring refactor for `equity-event-001`: rebalanced weights (55 forecast / 31 analysis-quality rubrics), bounded Brier Skill Score for probabilities, core-EPS probability event, per-submission audit, reconciliation self-consistency checks, 10-Q self-report removed from scoring, forecast accounting identity, new handover-quality rubric, `judge_timeout` 480 s, 23 offline tests; re-calibration on six rollouts (mean 43.14 ± 5.61) with v1.3.1 counterfactual comparison. See `docs/reports/equity-event-001-v3.3.1-report.md`.
 - **Open-source release (v1.3.1)** — repository made public: Apache-2.0 license, third-party data/provenance notes, citation metadata, English README, unit-test CI; documentation sanitized of local absolute paths.
 - **v1.3.1** — fixed the nine-metric forecast verifier (was averaging 7/9 metrics), re-ran three rollouts (38.61% / 29.13% / 33.01%, all ≤40%), updated the rollout report and design doc.
 - **v1.3.0** — `equity-event-001` calibrated to the target band; forecast expanded to nine metrics and promoted to the dominant weight (74/100); added one-off bridge, peer-earnings noise (real MSFT/META/AMZN same-evening 8-K EX-99.1), hardened audit (basis/read/unpublished citations) and tighter LLM rubrics; hardened the JSON-action harness against protocol noise (JSON extraction + DSML parsing); added rollout report and unified validation assessment.

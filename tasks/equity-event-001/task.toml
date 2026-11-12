@@ -18,7 +18,7 @@ max_bytes = 8000000
 
 [budget]
 target_timeout_seconds = 2400
-judge_timeout_seconds = 180
+judge_timeout_seconds = 480
 
 [workflow]
 id = "benchmark.equity-event-stream"
@@ -32,6 +32,12 @@ ground_truth_file = "judge/ground_truth.json"
 method = "weighted_mean"
 pass_threshold = 0.85
 
+# --- deterministic checks (total 69 points) --------------------------------
+# forecast 55, probabilities 5, one-off 2, reconciliation 2, 10-Q 2,
+# timeliness 1, audit 2. No check is must_pass; one local failure cannot zero
+# the case. The reported outcome label still requires the weighted mean to meet
+# the pass threshold under the platform aggregation semantics.
+
 [[judge.checks]]
 id = "forecast_composite"
 type = "command"
@@ -39,7 +45,7 @@ entrypoint = "judge/verify_ingest.py"
 command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
            "--submission", "/submission", "--result", "/judge-output/result.json",
            "--check", "forecast_composite"]
-weight = 74
+weight = 55
 must_pass = false
 
 [[judge.checks]]
@@ -59,7 +65,7 @@ entrypoint = "judge/verify_ingest.py"
 command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
            "--submission", "/submission", "--result", "/judge-output/result.json",
            "--check", "one_off_analysis"]
-weight = 3
+weight = 2
 must_pass = false
 
 [[judge.checks]]
@@ -69,7 +75,7 @@ entrypoint = "judge/verify_ingest.py"
 command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_truth.json",
            "--submission", "/submission", "--result", "/judge-output/result.json",
            "--check", "reconciliation_actuals"]
-weight = 3
+weight = 2
 must_pass = false
 
 [[judge.checks]]
@@ -102,10 +108,16 @@ command = ["{python}", "/judge/verify_ingest.py", "--scenario", "/judge/ground_t
 weight = 2
 must_pass = false
 
+# --- LLM rubrics (total 31 points) -----------------------------------------
+# Each rubric separates factual compliance (binary criteria) from analytical
+# quality (criteria graded through their weights / descriptive conditions).
+# Candidate text is untrusted data; criteria only reference fields the
+# submission schema already requires.
+
 [[judge.checks]]
 id = "evidence_chain"
 type = "llm_rubric"
-weight = 5
+weight = 10
 must_pass = false
 connection_slot = "judge"
 rubric_file = "judge/rubric_evidence.json"
@@ -114,8 +126,17 @@ submission_paths = ["evidence/equity_event.json"]
 [[judge.checks]]
 id = "analysis_logic"
 type = "llm_rubric"
-weight = 5
+weight = 13
 must_pass = false
 connection_slot = "judge"
 rubric_file = "judge/rubric_logic.json"
+submission_paths = ["evidence/equity_event.json"]
+
+[[judge.checks]]
+id = "handover_quality"
+type = "llm_rubric"
+weight = 8
+must_pass = false
+connection_slot = "judge"
+rubric_file = "judge/rubric_handover.json"
 submission_paths = ["evidence/equity_event.json"]

@@ -39,7 +39,7 @@ The shift ends at 23400 (21:30 ET).
 - Segment revenues: Google Services and Google Cloud reported segment revenues.
 - Segment operating income: segment operating income reported in the release segment table (Google Services and Google Cloud).
 - Operating income: consolidated income from operations.
-- Diluted EPS excluding one-offs: diluted GAAP EPS adjusted for the after-tax effect of one-off equity-securities gains/losses disclosed by the issuer. Where no such item exists, it equals GAAP diluted EPS.
+- Diluted EPS excluding one-offs (core EPS): diluted GAAP EPS adjusted for the after-tax effect of one-off equity-securities gains/losses disclosed by the issuer. Where no such item exists, it equals GAAP diluted EPS. This is an analytical basis used for the point forecast and for the EPS probability event; the reconciliation beat/miss classification uses the reported GAAP figures against the frozen consensus.
 - Surprise: `100 * (actual - consensus) / consensus` in percent, computed from the numbers you submit.
 - beat: surprise greater than +0.5%; miss: surprise less than -0.5%; otherwise in-line.
 
@@ -69,7 +69,7 @@ Every submission contains a top-level `summary` narrative (required for `reconci
 }
 ```
 
-- `probabilities`: your probability that the reported net revenue (respectively GAAP diluted EPS) will come in above the frozen consensus. Values in [0,1].
+- `probabilities`: your probability that reported net revenue, respectively the one-off-excluded diluted EPS (same basis as the point forecast), will come in above the frozen consensus by more than +0.5%. Values in [0,1]. The EPS probability event is deliberately on the one-off-excluded basis because the reported GAAP EPS includes one-off equity-securities gains that cannot be forecast from pre-release evidence.
 - `basis`: 1–10 objects; each names a document id that you actually read and explains its role in the forecast.
 
 ### reconciliation
@@ -102,23 +102,28 @@ Every submission contains a top-level `summary` narrative (required for `reconci
 
 - `one_off.equity_gain_usd_m`: net gain/loss on equity securities in the quarter, as disclosed by the release (USD m; 0.0 if none).
 - `one_off.core_eps_usd`: diluted EPS excluding the after-tax effect of that item.
-- `consistency.press_release_matches_10q`: whether the consolidated figures in the release agree with the Form 10-Q.
+- `consistency.press_release_matches_10q`: whether the consolidated figures in the release agree with the Form 10-Q. This is recorded as a claim for review; points come from the verified figures, not from this boolean.
 - `segment_margins_pct`: segment operating margin from the segment operating income / segment revenue disclosed in the earnings release table.
+- The `verification` `summary` is the shift handover: compare the graded pre-release forecast with the reported actuals, explain the GAAP-to-core EPS bridge, and record the main research lessons and any remaining uncertainty. The `reconciliation` summary should state the headline results against the frozen consensus.
 
 ## 6. Evidence and audit rules
 
-- Every cited document id must be a real document that exists in the database, must have been published at or before the business time of the submission, and must have actually been read (`read`) before you cite it.
+- Every cited document id must be a real document that exists in the database, must have been published at or before the business time of the submission, and must have actually been read (`read`) before you cite it. Citations are audited per submission: a document read after a submission cannot support that submission.
 - Reading a document that is not published yet is rejected; the failed attempt is recorded and reduces the audit score.
 - Rejected submissions also reduce the audit score.
 - Only public documents may be cited. The forecast `basis` documents are audited the same way.
 - Analysis in `summary` must be supported by what you actually observed; do not assert figures that you did not take from the database.
 
-## 7. Scoring outline
+## 7. Scoring outline (weights sum to 100)
 
-- Forecast accuracy against the reported quarter (several reported metrics, each with its own tolerance).
-- Probability calibration for the two beat events.
-- Post-release reconciliation arithmetic and beat/miss calls.
-- Post-10-Q verification of GAAP figures, the one-off adjustment and segment margins.
-- Timeliness of the three submissions.
-- Audit integrity (citations, reads, rejected actions).
-- Evidence chain and analysis logic (qualitative review of your summaries).
+- Forecast model, 55 points: nine pre-release metrics (equal weight, 90% of this check) plus the internal accounting identity TotalRevenue - NetRevenue - TAC = 0 (10% of this check, tolerance 2.0 USD m).
+- Beat probabilities, 5 points: a bounded Brier skill score over the two binary events; a no-information 0.5/0.5 pair scores 0.
+- One-off earnings bridge, 2 points: the equity-securities gain and core EPS.
+- Reconciliation, 2 points: submitted actuals, submitted consensus against the frozen benchmark, surprise arithmetic from your own numbers, and beat/miss against the +0.5% threshold.
+- 10-Q verification, 2 points: nine filed values (GAAP lines, operating margin, segment margins).
+- Timeliness, 1 point: the three submissions by their deadlines.
+- Audit integrity, 2 points: citations supported by published documents actually read before the citing submission; unpublished read attempts and rejected submissions count against it.
+- Evidence chain, 10 points and Analysis logic, 13 points: qualitative review of how well your summaries support and explain the analysis.
+- Handover quality, 8 points: qualitative review of your verification-phase summary as a research handover.
+
+No single check can zero the case; the reported outcome is a pass only when the weighted mean reaches the pass threshold.
