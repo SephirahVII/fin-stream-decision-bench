@@ -1,4 +1,4 @@
-# equity-event-001 v1.4.0：跨模型评测（DeepSeek V4.1 Flash vs V4 Pro）
+# equity-event-001 v1.4.0：跨模型评测（DeepSeek ×2 + Qianwen MaaS ×3）
 
 - 日期：2026-11-12
 - Case：`equity-event-001`（benchmark `extreme-financial-events` 1.4.0）
@@ -108,3 +108,84 @@ liteeval benchmark run 4caedfcf… --project <PROJECT> \
 1. 对 Pro 的 3 条轨迹做人工盲评，确认 evidence/handover 的低分是否属于 rubric 期望（写交接文档）与模型风格（简洁状态汇报）的错配；若是，考虑在 rubric 中把"内容是否包含"与"是否按指定结构呈现"拆开，而不是降低要求。
 2. 若要支持模型横向比较，建议把 judge 模型固定、judge 采样方差纳入报告（每模型 ≥3 次），并同时报告 scoring_coverage。
 3. 预测类 check 对强模型已接近饱和（Flash forecast 0.26 / Pro 0.21，满分 1.0），后续若继续加难，优先增加需要多步状态维护与纠偏的决策内容（见 `docs/design/other-cases.md` 的 Case B/D），而不是继续压缩预测容差。
+
+## 8. 第二批：Qianwen MaaS 三模型（2026-11-12 晚）
+
+### 8.1 协议与模型映射
+
+- 端点：`https://maas.qianwenaiapi.com/compatible-mode/v1`（OpenAI-compatible），独立 key；平台新建 3 个连接。
+- 用户指定模型：`qwen3.8-max`、`kimi-k3.1-pro`、`glm-5.3flash`。该 key 上 **GLM-5.3 Flash 系列未开通**（`ZHIPU/GLM-5.3-Flash`、`ZHIPU/GLM-5.3-FlashX`、`ZHIPU/GLM-5.3`、`cmaas-glm-5.3` 均返回 "The product is not activated" / `AccessDenied.Unpurchased`），实际可用的是 `glm-5.3`，因此 GLM 行使用 **glm-5.3**。Qwen/Kimi 使用用户给出的 id 原样（`/models` 均存在）。
+- 平台连接：Qwen3.8 Max `2d3cb783…`、Kimi K3.1 Pro `b3523942…`、GLM-5.3 `c5717b00…`；judge 仍固定 DeepSeek V4.1 Flash（`2e3e1a77…`），judge_timeout 480 s，release/harness 与 DeepSeek 批次相同（task package `4caedfcf…`，workflow `c5464596…`）。
+- Harness：`community.json-action` **1.3.1**（revision `afdc421f9a844b5c8a0753098de81a6c`）。相对 1.3.0 的唯一改动：单次 chat HTTP timeout 180 s → 600 s。原因：9 并发下部分 MaaS 请求 >180 s，1.3.0 会报 `Chat request failed (TimeoutError) after 3 attempt(s)`；这类失败按**环境/协议错误**排除，不计入模型能力。该改动只影响超慢请求，不改变快速请求行为，DeepSeek 批次的结果不受影响。
+
+### 8.2 有效结果（每个模型 3 次）
+
+| 模型 | model id | connection | 3 次 score | mean ± sd | wall / target / judge (s) | model calls |
+| --- | --- | --- | --- | --- | --- | --- |
+| Kimi K3.1 Pro | `kimi-k3.1-pro` | `b3523942…` | 58.06 / 60.85 / 57.35 | **58.75 ± 1.85** | 760/644/116；1,250/1,089/160；1,174/1,026/148 | 31 / 40 / 47 |
+| Qwen3.8 Max | `qwen3.8-max` | `2d3cb783…` | 45.39 / 44.09 / 44.19 | **44.56 ± 0.70** | 2,386/2,246/140；1,606/1,429/177；2,262/2,033/229 | 52 / 37 / 34 |
+| GLM-5.3 | `glm-5.3` | `c5717b00…` | 42.51 / 46.69 / 56.97 | **48.72 ± 7.44** | 1,314/1,152/162；2,355/2,186/170；2,430/2,281/149 | 32 / 30 / 37 |
+
+- Qwen 的第一次有效 run（45.39）使用 json_action 1.3.0，但全程未发生 HTTP 超时/重试；后两次使用 1.3.1。其余两个模型全部使用 1.3.1。
+- 汇总对照（同 rubric、同 judge、同 task package）：
+
+| 模型 | 有效 run | mean | sd | 说明 |
+| --- | ---: | ---: | ---: | --- |
+| DeepSeek-V4-Pro | 3 | 32.48 | 1.96 | DeepSeek 批次（harness 1.3.0，未遇超时） |
+| Qwen3.8 Max | 3 | 44.56 | 0.70 | MaaS；wall 接近 2,400 s 上限 |
+| DeepSeek-V4.1-Flash | 3 | 46.83 | 3.72 | DeepSeek 批次（另有 6 次历史 mean 43.14） |
+| GLM-5.3 | 3 | 48.72 | 7.44 | MaaS；方差大，有一次 wall 2,430 s |
+| Kimi K3.1 Pro | 3 | 58.75 | 1.85 | MaaS；本 rubric 下最高 |
+
+### 8.3 逐 check 均值与加权贡献（三个 MaaS 模型）
+
+| check | w | Kimi | Qwen3.8 Max | GLM-5.3 | 贡献 K / Q / G |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `forecast_composite` | 55 | 0.4055 | 0.2290 | 0.2387 | 22.30 / 12.60 / 13.13 |
+| `probabilities` | 5 | 0.1633 | 0.1795 | 0.3000 | 0.82 / 0.90 / 1.50 |
+| `one_off_analysis` | 2 | 1.0000 | 1.0000 | 1.0000 | 2.0 / 2.0 / 2.0 |
+| `reconciliation_actuals` | 2 | 0.9999 | 0.9948 | 0.9948 | 2.0 / 2.0 / 2.0 |
+| `tenq_verification` | 2 | 0.9848 | 0.8708 | 0.9200 | 1.97 / 1.74 / 1.84 |
+| `timeliness` | 1 | 1.0000 | 1.0000 | 1.0000 | 1.0 / 1.0 / 1.0 |
+| `audit_integrity` | 2 | 1.0000 | 1.0000 | 0.9667 | 2.0 / 2.0 / 1.93 |
+| `evidence_chain` | 10 | 1.0000 | 1.0000 | 0.9000 | 10.0 / 10.0 / 9.0 |
+| `analysis_logic` | 13 | 0.7436 | 0.4359 | 0.6923 | 9.67 / 5.67 / 9.0 |
+| `handover_quality` | 8 | 0.8750 | 0.8333 | 0.9167 | 7.0 / 6.67 / 7.33 |
+| **总分** | 100 | **58.75** | **44.56** | **48.72** | |
+
+### 8.4 排除的运行（环境/预算限制，不是模型能力）
+
+| 尝试 | 原因 | 处置 |
+| --- | --- | --- |
+| batch 1（1.3.0，9 并发）：qwen ×3、glm ×3 全部 unscored | 单次请求 >180 s → `Chat request failed (TimeoutError) after 3 attempt(s)`（agent harness 抛出）；qwen 另有一次撞到 2,400 s target wall 上限 | 排除，不计分 |
+| batch 1 kimi ×3（31.63 / 55.61 / 56.16） | 同为 1.3.0、高并发；分数与 1.3.1 批次（58.75±1.85）差异大，其中一次因慢导致 timeliness 0.6667 | **不作为主结果**，仅在本文记录 |
+| batch 2：GLM 第 3 次（`mg3b`，exec `a1b51e21…`） | 2,400 s target wall 上限触发（2428 s wall，无 HTTP 错误） | 排除；后补一次串行 run（`mg4b`, 56.97）作为第 3 个有效 run |
+| batch 1：qwen 第 1 次（`mq1v4qwen`，exec `96b71be2…`） | target wall 2,400 s 超时 | 排除 |
+
+### 8.5 解读
+
+1. **Kimi K3.1 Pro 在本 rubric 下明显最强**（58.75 ± 1.85）：forecast_composite 0.41（三个 MaaS 模型中最高，仍远低于 1.0）、analysis logic 0.74、evidence/handover 接近满分；其 40–47 次模型调用、target 644–1,089 s，是“强推理+可交付文本”的组合。
+2. **Qwen3.8 Max 与 GLM-5.3 分数接近**（44.56 / 48.72），但构成不同：Qwen 的 prediction 更差（forecast 0.229）且 tenq 波动（0.814–0.985）；GLM 的 analysis logic 方差极大（0.538 ↔ 1.0），两次 0.538 拉低均分，而 forecast/tenq 与 Qwen 相近。
+3. **三个 MaaS 模型都重复了 DeepSeek 的模式**：one_off=1.0、recon≈0.995、timeliness=1.0、audit=1.0 饱和；差异只出现在 forecast（predictive skill）与 analysis logic/handover（写作与推理表达）。这说明 v1.4.0 的 31 分分析质量 rubric 是唯一稳定产生区分度的区域，而预测部分对所有模型都仍远未饱和。
+4. **速度与预算**：Qwen3.8 Max 的 3 次里 2 次 wall >2,200 s（2,386 / 2,262 s），贴着 2,400 s 上限；GLM 有一次 2,430 s 并有一次直接超预算。若未来把更慢的 thinking 模型纳入评测，需要显式协议决定（提高 wall budget 并重校准，或在报告中按“预算内未完成”单列）。
+5. **公平性限制与第一批相同**：rubric 在 DeepSeek-Flash 轨迹上迭代，评分器固定为 Flash；Kimi 的高分可能部分来自其写作风格更贴合 H1–H5 的“交接文档”期望。跨模型比较应理解为“本 rubric/本 judge 下的得分”，不是通用能力排序。GLM 的 n=3 有效样本方差 7.44，说明单次结果不可靠，报告分布而不仅是均值。
+6. **GLM Flash 未开通**：`glm-5.3flash` 在本 key 上不可用（产品未激活/未购买），本批使用 `glm-5.3`；若用户在控制台开通 Flash 产品，可用同一连接方式补测对应 id。
+
+### 8.6 复现与执行 id
+
+Harness `afdc421f…`（json-action 1.3.1），workflow `c5464596…`，release `4caedfcf…`，judge 连接 `2e3e1a77…`，`--trusted-local`。
+
+| 模型 | run | execution id | score |
+| --- | --- | --- | ---: |
+| Kimi K3.1 Pro | mk1b | `bea02b57a3fe4a74b43e0098d9aa421f` | 58.06 |
+| Kimi K3.1 Pro | mk2b | `16525bf2e6bd40e4a160f2fe0bdeca3f` | 60.85 |
+| Kimi K3.1 Pro | mk3b | `f37c6f5135a245e584852ab41bead8fb` | 57.35 |
+| Qwen3.8 Max | mq1r2 | `ab3f5098319243c6871ef544cda29f38` | 45.39 |
+| Qwen3.8 Max | mq2b | `18cd84bbc115462f9ce3ef51e5e694d3` | 44.09 |
+| Qwen3.8 Max | mq3b | `97c53f6ea117495495bd66333275fff8` | 44.19 |
+| GLM-5.3 | mg1b | `b869ae8e8d9b40459abfb573f74c51db` | 42.51 |
+| GLM-5.3 | mg2b | `cd1d1434147842e58204e09af510ae38` | 46.69 |
+| GLM-5.3 | mg4b | `a7cb475513514c38aa510c01282666be` | 56.97 |
+
+工程备注：为慢模型把 json_action 的 HTTP timeout 从 180 s 提高到 600 s（1.3.1），已在 bench 仓库提交；平台代码未修改。
+

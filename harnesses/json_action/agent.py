@@ -29,7 +29,7 @@ def post(request, model, timing=None):
             timing['started']=began
         send('event',kind='model_request',payload={'api':'chat','attempt':attempt})
         try:
-            with opener.open(request,timeout=180) as stream:
+            with opener.open(request,timeout=600) as stream:
                 return stream.read(4_000_001)
         except (urllib.error.URLError,TimeoutError,ConnectionError,http.client.IncompleteRead) as exc:
             status=exc.code if isinstance(exc,urllib.error.HTTPError) else None

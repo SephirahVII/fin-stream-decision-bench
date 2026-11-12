@@ -253,6 +253,7 @@ Ground truth（judge 侧，全部来自真实披露，见 `judge/ground_truth.js
 - Pro 更慢（target 19–24 min vs 3–5 min，均 < 2400 s 预算）、invalid actions 约 1 次/run（Flash 4–15 次）、reasoning tokens 高 50–90%；两者 audit=1.0、timeliness=1.0、one_off=1.0，均完成三阶段提交。
 - 定性证据：Flash verification summary 2.3–3.7k chars（含 forecast-vs-actual 逐项、GAAP→core 桥、研究教训、残余不确定性）；Pro 0.9–1.4k chars（更像状态确认），直接导致 H1/H3/H4 与部分 E2/E4 失分。
 - **风格偏差警告**：本 case 的 rubric/权重在 Flash 轨迹上迭代，H1–H5 对"把对比、教训、不确定性写进 summary"有结构要求；Pro 的简洁风格可能被部分惩罚，不能据此断言 Pro 分析能力更弱。后续建议格式中性 rubric 变体或人工盲评 Pro 轨迹。
+- 第二批（Qianwen MaaS，OpenAI-compatible 端点 `https://maas.qianwenaiapi.com/compatible-mode/v1`）：`qwen3.8-max` 44.56 ± 0.70（45.39/44.09/44.19）、`glm-5.3` 48.72 ± 7.44（42.51/46.69/56.97；该 key 上 GLM-5.3-Flash 系列未开通，实际用 glm-5.3）、`kimi-k3.1-pro` 58.75 ± 1.85（58.06/60.85/57.35）；judge 仍为 DeepSeek-Flash，harness 升到 json_action 1.3.1（HTTP timeout 180→600 s，慢模型超时属基础设施错误不计分）。三模型同样出现 one_off/recon/timeliness/audit 饱和，区分度仍来自 forecast（0.23–0.41）与 analysis logic/handover。Qwen/GLM 的 target wall 达 2,100–2,400 s，贴近任务 2,400 s 预算；GLM 一次超预算（unscored）。
 - 详细报告：`docs/reports/equity-event-001-v1.4.0-multimodel.md`。
 
 ## 13. 实现布局与复现

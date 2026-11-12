@@ -34,4 +34,7 @@ abstract: >-
   reallocation, not criterion loosening. Cross-model evaluation (3 rollouts each, same task package
   and judge): DeepSeek-V4.1-Flash mean 46.83 +- 3.72, DeepSeek-V4-Pro mean 32.48 +- 1.96; the gap
   concentrates in the analysis-quality rubrics, and the rubrics were calibrated on Flash traces, so
-  a style bias caveat is documented.
+  a style bias caveat is documented. A second cross-model batch on an OpenAI-compatible MaaS
+  endpoint (same task package and judge) reports qwen3.8-max 44.56 +- 0.70, glm-5.3 48.72 +- 7.44 and
+  kimi-k3.1-pro 58.75 +- 1.85 (three scored rollouts each); slowly-reasoning models brush the task's
+  2,400 s wall budget and the agent harness HTTP timeout was raised from 180 s to 600 s accordingly.
