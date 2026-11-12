@@ -270,7 +270,7 @@ liteeval benchmark validate /tmp/v140_clean
 # 平台验证（LiteEval 90ed715；使用项目 a52403def… 的 connection 2e3e1a77…）
 export LITEEVAL_SECRET_KEY=$(cat /path/to/master.key)
 liteeval benchmark validate .
-liteeval benchmark import /tmp/ee-pkg-v331 --project <PROJECT>                  # release 4caedfcf…
+liteeval benchmark import <PACKAGE_DIR> --project <PROJECT>                     # release 4caedfcf…
 liteeval benchmark run <RELEASE_CONF> --project <PROJECT> \
   --agent-harness <test.scripted-equity revision> --workflow-harness <benchmark.equity-event-stream revision> \
   --judge-connection <CONNECTION> --trusted-local                               # conformance 0.94

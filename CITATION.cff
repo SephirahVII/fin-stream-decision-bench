@@ -31,4 +31,7 @@ abstract: >-
   evidence/logic/handover LLM rubrics). Measured difficulty with DeepSeek-V4.1-Flash: six scored
   rollouts, mean 43.14 +- 5.61 (final configuration four runs: 42.01 +- 1.50); the same evidence
   under the previous v1.3.1 weights scores mean 36.40, showing the shift is from weight
-  reallocation, not criterion loosening.
+  reallocation, not criterion loosening. Cross-model evaluation (3 rollouts each, same task package
+  and judge): DeepSeek-V4.1-Flash mean 46.83 +- 3.72, DeepSeek-V4-Pro mean 32.48 +- 1.96; the gap
+  concentrates in the analysis-quality rubrics, and the rubrics were calibrated on Flash traces, so
+  a style bias caveat is documented.

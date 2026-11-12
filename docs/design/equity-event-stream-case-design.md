@@ -240,6 +240,21 @@ Ground truth（judge 侧，全部来自真实披露，见 `judge/ground_truth.js
 - 困难带说明：v1.3.1 的 30–40 目标未在 v3.3.1 下重做；本轮按规格以 validity 优先、不按阈值调参。当前观测 40.18–53.62（mean 43.14）。若需把总分压回 30–40，应作为独立的难度校准决定（并在报告中显式声明），而不是继续收紧判据。
 - 详细报告：`docs/reports/equity-event-001-v3.3.1-report.md`。
 
+### 跨模型评测（2026-11-12）
+
+按用户要求，用同一 API key 下的两个模型各跑 3 次（同 task package / workflow harness / agent harness / judge 连接）：
+
+| 模型 | connection | 3 次 score | mean ± sd |
+| --- | --- | --- | --- |
+| DeepSeek-V4.1-Flash（`deepseek-flash`） | `2e3e1a77…` | 50.45 / 43.01 / 47.03 | 46.83 ± 3.72 |
+| DeepSeek-V4-Pro（`deepseek-v4-pro`） | `64e487bd…` | 30.94 / 31.82 / 34.69 | 32.48 ± 1.96（3/3 在 30–40 带内） |
+
+- 分差（+14.35）主要来自三条分析质量 rubric：evidence 8.67 vs 5.67、analysis logic 5.33 vs 1.67、handover 7.67 vs 3.67（加权贡献）；forecast 加权贡献 14.32 vs 11.61（预测数值本身差距不大）。
+- Pro 更慢（target 19–24 min vs 3–5 min，均 < 2400 s 预算）、invalid actions 约 1 次/run（Flash 4–15 次）、reasoning tokens 高 50–90%；两者 audit=1.0、timeliness=1.0、one_off=1.0，均完成三阶段提交。
+- 定性证据：Flash verification summary 2.3–3.7k chars（含 forecast-vs-actual 逐项、GAAP→core 桥、研究教训、残余不确定性）；Pro 0.9–1.4k chars（更像状态确认），直接导致 H1/H3/H4 与部分 E2/E4 失分。
+- **风格偏差警告**：本 case 的 rubric/权重在 Flash 轨迹上迭代，H1–H5 对"把对比、教训、不确定性写进 summary"有结构要求；Pro 的简洁风格可能被部分惩罚，不能据此断言 Pro 分析能力更弱。后续建议格式中性 rubric 变体或人工盲评 Pro 轨迹。
+- 详细报告：`docs/reports/equity-event-001-v1.4.0-multimodel.md`。
+
 ## 13. 实现布局与复现
 
 ```

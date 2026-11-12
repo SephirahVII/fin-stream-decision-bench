@@ -22,7 +22,7 @@ Current release covers **8 cases across 4 workflow controllers** (business-clock
 | LDI duty | `ldi-margin-001/002/003` | 08:30–11:00 treasury liquidity duty; two branches share the pre-09:12 event stream, then diverge into repo rejection vs normal, with a calm-state control for false alarms | process acceptance |
 | Treasury network L8 | `treasury-duty` | multi-entity, multi-currency treasury: notice revisions, FX match failures, SSI changes, shared limits, debt repayment | operational baseline (Flash 100 / M3 61.39) |
 | Source treasury 0.3.0 | `source-treasury-stress/quiet/hedged` | no internal cash or forecast given — risk ledger must be reconstructed from bank records, trade registry, CSA agreements and market factors | calibration candidate (stress avg Flash 66.43 / M3 100; risk items tightened in v1.1.0) |
-| Equity event stream | `equity-event-001` | real SEC data: Alphabet Q1 2026 earnings night; SQL database + business-clock disclosure stream; pre-earnings forecast → post-release reconciliation → 10-Q verification | **v1.4.0: validity-first scoring refactor; 6 scored rollouts, mean 43.14 ± 5.61 (final config 4 runs: 42.01 ± 1.50)** |
+| Equity event stream | `equity-event-001` | real SEC data: Alphabet Q1 2026 earnings night; SQL database + business-clock disclosure stream; pre-earnings forecast → post-release reconciliation → 10-Q verification | **v1.4.0: validity-first scoring refactor. Flash (deepseek-flash): 6 scored rollouts, mean 43.14 ± 5.61; V4 Pro (deepseek-v4-pro): 3 rollouts, mean 32.48 ± 1.96** |
 
 ## Flagship case: `equity-event-001`
 
@@ -38,8 +38,11 @@ Scoring (100 points, v1.4.0): nine-metric forecast composite **55** (including a
 
 Calibration with `deepseek-flash` on LiteEval `90ed715` (six scored rollouts, identical model/harness/settings): **53.62 / 37.16 / 43.15 / 43.32 / 41.41 / 40.18** (mean 43.14, sd 5.61; final-configuration four: mean 42.01, sd 1.50). Applying the previous v1.3.1 weights to the same evidence gives mean 36.40 — the shift comes from weight reallocation toward analytical evidence (where the model does have measurable skill), not from loosening any criterion.
 
+Cross-model evaluation (same task package, harness and judge; three rollouts each, all scored): `deepseek-flash` **50.45 / 43.01 / 47.03** (mean 46.83, sd 3.72) and `deepseek-v4-pro` **30.94 / 31.82 / 34.69** (mean 32.48, sd 1.96, all three inside the 30–40 band). The ~14 pp gap comes from the three analysis-quality rubrics (evidence chain 8.67 vs 5.67, analysis logic 5.33 vs 1.67, handover 7.67 vs 3.67 weighted), not from prediction accuracy (weighted forecast contribution 14.32 vs 11.61); V4 Pro is slower (target phase 19–24 min vs 3–5 min) and produced ~1 invalid action per run vs 4–15 for Flash. V4 Pro's verification narratives are much shorter (0.9–1.4k vs 2.3–3.7k chars) and read as status confirmations rather than analytical handovers. **Caveat:** the rubrics were iterated on Flash traces, so the gap may partly reflect writing-style expectations rather than reasoning ability; a format-neutral rubric variant or blind human review of Pro trajectories is the recommended follow-up.
+
 - Full design (database, prompts, tools, execution chain, rubric, judge prompts): [`docs/design/equity-event-stream-case-design.md`](docs/design/equity-event-stream-case-design.md) *(Chinese)*
 - v1.4.0 scoring-refactor report (audit, per-file changes, scoring table, judge-variance and rollout comparison): [`docs/reports/equity-event-001-v3.3.1-report.md`](docs/reports/equity-event-001-v3.3.1-report.md) and [`docs/reports/equity-event-001-v3.3.1-audit.md`](docs/reports/equity-event-001-v3.3.1-audit.md)
+- Cross-model report (deepseek-flash vs deepseek-v4-pro, protocol, per-check comparison, style-bias caveats): [`docs/reports/equity-event-001-v1.4.0-multimodel.md`](docs/reports/equity-event-001-v1.4.0-multimodel.md)
 - Earlier v1.3.1 rollout report with trajectories and per-check scores: [`docs/reports/equity-event-001-rollout-report.md`](docs/reports/equity-event-001-rollout-report.md) ([HTML](docs/reports/equity-event-001-rollout-report.html))
 - Independent validation (realism / anti-lookahead / solvability): [`docs/validation/UNIFIED-ASSESSMENT.md`](docs/validation/UNIFIED-ASSESSMENT.md)
 
@@ -125,6 +128,7 @@ docs/proposals/               future task-family proposals
 
 ## Version history
 
+- **v1.4.0 (multi-model addendum)** — same v1.4.0 package evaluated on two DeepSeek models (3 rollouts each): Flash mean 46.83 ± 3.72, V4 Pro mean 32.48 ± 1.96 (3/3 in the 30–40 band); cross-model report added. Rubrics were calibrated on Flash traces; style-bias caveat documented.
 - **v1.4.0** — validity-first scoring refactor for `equity-event-001`: rebalanced weights (55 forecast / 31 analysis-quality rubrics), bounded Brier Skill Score for probabilities, core-EPS probability event, per-submission audit, reconciliation self-consistency checks, 10-Q self-report removed from scoring, forecast accounting identity, new handover-quality rubric, `judge_timeout` 480 s, 23 offline tests; re-calibration on six rollouts (mean 43.14 ± 5.61) with v1.3.1 counterfactual comparison. See `docs/reports/equity-event-001-v3.3.1-report.md`.
 - **Open-source release (v1.3.1)** — repository made public: Apache-2.0 license, third-party data/provenance notes, citation metadata, English README, unit-test CI; documentation sanitized of local absolute paths.
 - **v1.3.1** — fixed the nine-metric forecast verifier (was averaging 7/9 metrics), re-ran three rollouts (38.61% / 29.13% / 33.01%, all ≤40%), updated the rollout report and design doc.
