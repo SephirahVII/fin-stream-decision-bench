@@ -88,6 +88,18 @@ Run the unit tests (no model calls, stdlib only):
 python -m unittest discover -s tests -v
 ```
 
+## Harbor task (branch only)
+
+The `harbor-port` branch also ships this case as a Harbor task at
+`tasks/harbor-equity-event-001/` (container environment, separate verifier,
+same deterministic + LLM-rubric scoring). It is not part of the LiteEval
+distribution on `main`. A first Harbor trial with `mini-swe-agent` +
+DeepSeek-V4.1-Flash scored 0.5295 (LiteEval package on the same fixtures:
+46.8-52.9 band), and the oracle reference scores 0.92-0.93. See
+[docs/harbor-port.md](docs/harbor-port.md) and
+[docs/reports/equity-event-001-harbor-port.md](docs/reports/equity-event-001-harbor-port.md)
+for the layout, run commands and results.
+
 ## Repository layout
 
 ```

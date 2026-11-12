@@ -1,0 +1,46 @@
+schema_version = "1.4"
+artifacts = [
+  "/app/evidence/equity_event.json",
+  "/app/.desk/journal.jsonl",
+  "/app/.desk/submissions.json",
+]
+
+[task]
+name = "sephirahvii/equity-event-001"
+version = "1.0.0"
+description = "Equity event desk: make and reconcile an earnings-night forecast under a continuously updating disclosure stream (Alphabet Q1 2026, real SEC data, deterministic replay)."
+authors = []
+keywords = ["finance", "agent-evaluation", "event-stream", "sec-filings", "lookahead-prevention"]
+
+[metadata]
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+
+[verifier.environment]
+network_mode = "allowlist"
+allowed_hosts = ["api.deepseek.com"]
+cpus = 2
+memory_mb = 4096
+
+[verifier.env]
+DEEPSEEK_API_KEY = "${DEEPSEEK_API_KEY}"
+
+[agent]
+timeout_sec = 3000.0
+user = "agent"
+network_mode = "allowlist"
+allowed_hosts = ["api.deepseek.com"]
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 900.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240
+mcp_servers = []
+
+[solution.env]
+DEEPSEEK_API_KEY = "${DEEPSEEK_API_KEY:-unused}"
